@@ -3,7 +3,7 @@ import HeaderIcon from '../assets/review.png';
 
 const Header = () => {
     return (
-        <div className='bg-blue-800 py-4 md:py-6'>
+        <div className='bg-blue-600 py-4 md:py-6'>
             <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
                 <span className='text-xl md:text-3xl text-white font-bold tracking-tight md:ml-4 flex items-center mb-2 md:mb-0'>
                     <img src={HeaderIcon} className="w-8 h-8 md:w-12 md:h-12 mr-2" />
