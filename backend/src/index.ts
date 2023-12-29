@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import "dotenv/config";
 import mongoose, { mongo } from 'mongoose';
+import userRoutes from './routes/user'
 
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string)
 
@@ -21,3 +22,11 @@ app.get("/api/test", async (req: Request, res: Response) => {
 app.listen(7000, () => {
     console.log("Server is running on port 7000");
 })
+
+
+app.use("/api/users", userRoutes);
+
+// 1- Note :-
+// In a Node.js backend application, the index.js file serves as the 'entry point' of the application. 
+// It typically handles tasks such as Server Creation, Database Connection, Middleware Setup, Routes and Controllers, Models Initialization,
+// Environment Variables,Error Handling.
