@@ -169,7 +169,7 @@ router.post("/register", [
             secure: process.env.NODE_ENV === "production",
             maxAge: 24 * 60 * 60 * 1000, // 24 hours
         })
-        return res.status(200).json({ message: "User registered successfully" }); // without json() it will not return anything when we hit the api, even though the api is working fine
+        return res.status(200).send({ message: "User registered OK" }); // without json() it will not return anything when we hit the api, even though the api is working fine
     } catch (error) {
         res.status(500).json({ message: "Something went wrong" });
     }
