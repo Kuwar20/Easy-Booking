@@ -154,7 +154,7 @@ router.post("/register", [
         let user = await User.findOne({ email: req.body.email });
 
         if (user) {
-            return res.status(400).json({ msg: "The user already exists" });
+            return res.status(400).send({ message: "The user already exists" });
         }
 
         user = new User(req.body);
