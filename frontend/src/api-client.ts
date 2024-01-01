@@ -18,7 +18,7 @@ export const register = async (formData: RegisterFormData) => {
     }
 };
 
-export const singIn = async (FormData: SignInFormData)=>{
+export const singIn = async (FormData: SignInFormData) => {
     const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         credentials: 'include',
@@ -39,14 +39,14 @@ export const validateToken = async () => {
         method: 'GET',
         credentials: 'include',
     });
-    const responseBody = await response.json();
+    
     if (!response.ok) {
-        throw new Error(responseBody.message);
+        throw new Error("Token invalid");
     }
-    return responseBody;
-}
+    return response.json();
+};
 
-export const signOut = async () =>{
+export const signOut = async () => {
     const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
