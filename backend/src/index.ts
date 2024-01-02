@@ -5,6 +5,7 @@ import mongoose, { mongo } from "mongoose";
 import userRoutes from "./routes/user";
 import authRoutes from "./routes/auth";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string)
 
@@ -26,12 +27,16 @@ app.use(
 //     res.json({ message: "Hello from express endpoint" });
 // });
 
+
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+
 app.listen(7000, () => {
     console.log("Server is running on port 7000");
 });
 
-app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
 
 // 1- Note :-
 // In a Node.js backend application, the index.js file serves as the 'entry point' of the application.

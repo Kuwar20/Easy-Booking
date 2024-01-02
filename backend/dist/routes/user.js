@@ -19,7 +19,33 @@ const express_validator_1 = require("express-validator");
 const router = express_1.default.Router();
 // /api/users/register
 router.post("/register", [
-
+    // to basic form validation
+    // check("firstName", "First Name is required").isString().not().isEmpty(),
+    // problem is this is when it gets an condition(here error) it will stop checking the other conditions
+    // check("firstName").custom((value, { req }) => {
+    //     if (!value) {
+    //         throw new Error("Firstname is required");
+    //     } else if (value === req.body.email) {
+    //         throw new Error("Firstname cannot be the same as the email");
+    //     } else if (value === req.body.password) {
+    //         throw new Error("Firstname cannot be the same as the password");
+    //     } else if (value === req.body.lastName) {
+    //         throw new Error("Firstname cannot be the same as the lastName");
+    //     }
+    //     return true;
+    // }).not().isEmpty(),
+    // check("lastName").custom((value, { req }) => {
+    //     if (!value) {
+    //         throw new Error("LastName is required");
+    //     } else if (value === req.body.email) {
+    //         throw new Error("LastName cannot be the same as the email");
+    //     } else if (value === req.body.password) {
+    //         throw new Error("LastName cannot be the same as the password");
+    //     } else if (value === req.body.firstName) {
+    //         throw new Error("LastName cannot be the same as the firstName");
+    //     }
+    //     return true;
+    // }).not().isEmpty(),
     (0, express_validator_1.check)("firstName").custom((value, { req }) => {
         const errors = [];
         if (!value) {
@@ -58,8 +84,17 @@ router.post("/register", [
         }
         return true;
     }),
+    // check("lastName", "Last Name is required").isString().not().isEmpty(),
     (0, express_validator_1.check)("email", "Please enter a valid email").isEmail(), // here not empty will give 2 same error message
-
+    //check("password", "Password should be 8 or more character").isLength({ min: 8 }),
+    // check("password").custom((value, { req }) => {
+    //     if (!value) {
+    //         throw new Error("Password is required");
+    //     } else if (value.length < 8) {
+    //         throw new Error("Password should be 8 or more characters");
+    //     }
+    //     return true;
+    // }),
     (0, express_validator_1.check)("password").custom((value, { req }) => {
         const errors = [];
         if (!value) {
@@ -118,3 +153,6 @@ router.post("/register", [
     }
 }));
 exports.default = router;
+// 3- Note :-
+//Routes define how an application responds to different HTTP (GET, POST, PUT, DELETE, etc.)  requests and navigate users to specific pages or functionalities.
+//Routes are a fundamental part of web development and are often used in the backend to handle different endpoints
