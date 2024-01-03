@@ -12,7 +12,7 @@ const upload = multer({
     storage: storage,
     limits: {
         fileSize: 5 * 1024 * 1024,
-    }, // in bytes // 5mb
+    }, 
 });
 
 router.post(
@@ -46,7 +46,7 @@ router.post(
                 const res = await cloudinary.v2.uploader.upload(dataURI);
                 return res.url;
             });
-
+            
             const imageUrls = await Promise.all(uploadPromises);
             newHotel.imageUrls = imageUrls;
             newHotel.lastUpdated = new Date();
