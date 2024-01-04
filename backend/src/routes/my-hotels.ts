@@ -11,13 +11,13 @@ const storage = multer.memoryStorage();
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 5 * 1024 * 1024,
+        fileSize: 10 * 1024 * 1024,
     }, 
 });
 
 router.post(
     "/",
-    verifyToken,
+    //verifyToken,
     [
         body("name").notEmpty().withMessage("Name is required"),
         body("city").notEmpty().withMessage("City is required"),
@@ -43,10 +43,10 @@ router.post(
             const uploadPromises = imageFiles.map(async (image) => {
                 const b64 = Buffer.from(image.buffer).toString("base64");
                 let dataURI = "data" + image.mimetype + ";base64," + b64;
-                const res = await cloudinary.v2.uploader.upload(dataURI);
+                const res = await cloudinary.v2.uploader.upload(dataURI); 
                 return res.url;
             });
-            
+
             const imageUrls = await Promise.all(uploadPromises);
             newHotel.imageUrls = imageUrls;
             newHotel.lastUpdated = new Date();
@@ -64,7 +64,7 @@ router.post(
             res.status(500).json({ message: "Something went wrong" });
         }
     }
-);
+); 
 
 
 export default router;

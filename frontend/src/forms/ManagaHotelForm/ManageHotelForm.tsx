@@ -73,8 +73,8 @@ const ManageHotelForm = ({ onSave, isLoading } : Props) => {
     Array.from(formDataJson.imageFiles).forEach((imageFile) => {
       formData.append(`imageFiles`, imageFile);
     });
-    console.log(formDataJson);
-
+    
+console.log(formDataJson);
     onSave(formData);
   });
 

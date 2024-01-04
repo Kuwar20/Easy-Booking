@@ -7,7 +7,7 @@ import authRoutes from "./routes/auth";
 import cookieParser from "cookie-parser";
 import path from "path";
 import {v2 as cloudinary} from "cloudinary";
-import myHotelRoutes from "./routes/my-hotel";
+import myHotelRoutes from "./routes/my-hotels";
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
