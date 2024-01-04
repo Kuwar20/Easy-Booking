@@ -13,7 +13,7 @@ const upload = multer({
     storage: storage,
     limits: {
         fileSize: 10 * 1024 * 1024,
-    }, 
+    },
 });
 
 router.post(
@@ -44,7 +44,7 @@ router.post(
             const uploadPromises = imageFiles.map(async (image) => {
                 const b64 = Buffer.from(image.buffer).toString("base64");
                 let dataURI = "data:" + image.mimetype + ";base64," + b64;
-                const res = await cloudinary.v2.uploader.upload(dataURI); 
+                const res = await cloudinary.v2.uploader.upload(dataURI);
                 return res.url;
             });
 
@@ -65,7 +65,16 @@ router.post(
             res.status(500).json({ message: "Something went wrong" });
         }
     }
-); 
+);
+
+router.get("/", verifyToken, async (req: Request, res: Response) => {
+    try {
+        const hotels = await Hotel.find({ userId: req.userId });
+        res.json(hotels);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching hotels" });
+    }
+});
 
 
 export default router;
