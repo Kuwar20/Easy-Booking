@@ -13,7 +13,7 @@ import AddHotel from "./pages/AddHotel";
 import { useAppContext } from "./contexts/AppContext";
 
 function App() {
-  const { isLoggedIn } = useAppContext();
+const { isLoggedIn } = useAppContext();
   
   return (
     <>
@@ -63,7 +63,7 @@ function App() {
                 }
               />
             </>
-          )}
+            )}
 
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

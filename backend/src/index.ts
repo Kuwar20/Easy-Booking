@@ -6,7 +6,7 @@ import userRoutes from "./routes/user";
 import authRoutes from "./routes/auth";
 import cookieParser from "cookie-parser";
 import path from "path";
-import {v2 as cloudinary} from "cloudinary";
+import { v2 as cloudinary} from "cloudinary";
 import myHotelRoutes from "./routes/my-hotels";
 
 
