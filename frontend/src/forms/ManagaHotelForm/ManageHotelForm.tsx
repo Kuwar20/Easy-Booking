@@ -5,20 +5,6 @@ import FacilitiesSection from "./FacilitiesSection";
 import GuestSection from "./GuestsSection";
 import ImagesSection from "./ImagesSection";
 
-// export type HotelFormData = {
-//   name: string;
-//   city: string;
-//   country: string;
-//   description: string;
-//   type: string;
-//   pricePerNight: number;
-//   starRating: number;
-//   facilities: string[];
-//   imageFiles: FileList;
-//   adultCount: number;
-//   childCount: number;
-// };
-
 export type HotelFormData = {
   name: string;
   city: string;
@@ -47,15 +33,6 @@ const ManageHotelForm = ({ onSave, isLoading } : Props) => {
   
   const onSubmit = handleSubmit((formDataJson: HotelFormData) => {
     const formData = new FormData();
-    // formData.append("name", formDataJson.name);
-    // formData.append("city", formDataJson.city);
-    // formData.append("country", formDataJson.country);
-    // formData.append("description", formDataJson.description);
-    // formData.append("type", formDataJson.type);
-    // formData.append("pricePerNight", formDataJson.pricePerNight.toString());
-    // formData.append("starRating", formDataJson.starRating.toString());
-    // formData.append("adultCount", formDataJson.adultCount.toString());
-    // formData.append("childCount", formDataJson.childCount.toString());
     formData.append("name", formDataJson.name);
     formData.append("city", formDataJson.city);
     formData.append("country", formDataJson.country);
