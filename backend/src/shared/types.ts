@@ -1,5 +1,3 @@
-import { Key } from "readline";
-
 export type UserType = {
     _id: string;
     email: string;
@@ -12,7 +10,6 @@ export type UserType = {
 
 
 export type HotelType = {
-    id: Key | null | undefined;
     _id: string;
     userId: string;
     name: string;
