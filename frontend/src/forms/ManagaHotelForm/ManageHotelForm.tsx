@@ -67,7 +67,7 @@ const ManageHotelForm = ({ onSave, isLoading, hotel } : Props) => {
       formData.append(`imageFiles`, imageFile);
     });
     
-console.log(formDataJson);
+//console.log(formDataJson);
     onSave(formData);
   });
 
