@@ -4,10 +4,10 @@ import * as apiClient from "../api-client";
 import { useState } from "react";
 import SearchResultsCard from "../components/SearchResultsCard";
 import Pagination from "../components/Pagination";
-// import StarRatingFilter from "../components/StarRatingFilter";
-// import HotelTypesFilter from "../components/HotelTypesFilter";
-// import FacilitiesFilter from "../components/FacilitiesFilter";
-// import PriceFilter from "../components/PriceFilter";
+import StarRatingFilter from "../components/StarRatingFilter";
+import HotelTypesFilter from "../components/HotelTypesFilter";
+import FacilitiesFilter from "../components/FacilitiesFilter";
+import PriceFilter from "../components/PriceFilter";
 
 const Search = () => {
     const search = useSearchContext();
@@ -75,7 +75,7 @@ const Search = () => {
                     <h3 className="text-lg font-semibold border-b border-slate-300 pb-5">
                         Filter by:
                     </h3>
-                    {/* <StarRatingFilter
+                    <StarRatingFilter
                         selectedStars={selectedStars}
                         onChange={handleStarsChange}
                     />
@@ -90,7 +90,7 @@ const Search = () => {
                     <PriceFilter
                         selectedPrice={selectedPrice}
                         onChange={(value?: number) => setSelectedPrice(value)}
-                    /> */}
+                    />
                 </div>
             </div>
             <div className="flex flex-col gap-5">
