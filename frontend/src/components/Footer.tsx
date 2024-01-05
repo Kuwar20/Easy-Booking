@@ -1,26 +1,7 @@
-// const Footer = () => {
-//     return (
-//         <div classNameName="bg-blue-800 py-6 md:py-10">
-//             <div classNameName="container mx-auto flex flex-col md:flex-row justify-between items-center">
-//                 <span classNameName="text-xl md:text-3xl text-white font-bold tracking-tight mb-2 md:mb-0">
-//                     Holidays.com
-//                 </span>
-//                 <span classNameName="text-white font-bold tracking-tight flex flex-col md:flex-row gap-4">
-//                     <p classNameName="cursor-pointer">Privacy Policy</p>
-//                     <p classNameName="cursor-pointer">Terms of Service</p>
-//                 </span>
-//             </div>
-//         </div>
-//     );
-// }
-
-// export default Footer;
-
-
 const Footer = () => {
     return (
         <div>
-            <footer className="bg-blue-600 py-6 md:py-10">
+            <footer className="bg-blue-700 py-6 md:py-10">
                 <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
                     <div className="sm:flex sm:items-center sm:justify-between">
                         <a href="#" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
