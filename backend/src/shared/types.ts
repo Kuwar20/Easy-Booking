@@ -24,7 +24,9 @@ export interface HotelType {
     starRating: number;
     imageUrls: string[];
     lastUpdated: Date;
+    bookings: BookingType[];
 }
+
 export type BookingType = {
     _id: string;
     userId: string;
