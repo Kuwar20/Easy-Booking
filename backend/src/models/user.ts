@@ -1,16 +1,7 @@
 import mongoose from 'mongoose';
 //This line imports the Mongoose library, which provides a straightforward, schema-based solution to model your application data with MongoDB.
 import bcrypt from 'bcryptjs';
-
-export type UserType = {
-    _id: string;
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-};
-//This TypeScript type definition describes the shape/structure of a User object. Each user has an _id, email, password, firstName, and lastName. All of these fields are strings
-//This is defining the structure of a User in our application. 
+import { UserType } from '../shared/types';
 
 const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
