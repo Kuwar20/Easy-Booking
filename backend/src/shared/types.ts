@@ -1,3 +1,5 @@
+import { Key } from "readline";
+
 export type UserType = {
     _id: string;
     email: string;
@@ -9,7 +11,8 @@ export type UserType = {
 //This is defining the structure of a User in our application. 
 
 
-export interface HotelType {
+export type HotelType = {
+    id: Key | null | undefined;
     _id: string;
     userId: string;
     name: string;

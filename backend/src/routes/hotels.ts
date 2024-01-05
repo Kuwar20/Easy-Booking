@@ -231,4 +231,4 @@ const constructSearchQuery = (queryParams: any) => {
     return constructedQuery;
 };
 
-export default router;
+export default router; 

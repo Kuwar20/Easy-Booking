@@ -152,4 +152,4 @@ const BookingForm = ({ currentUser, paymentIntent }: Props) => {
     );
 };
 
-export default BookingForm;
+export default BookingForm; 
