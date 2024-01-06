@@ -15,8 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 //This line imports the Mongoose library, which provides a straightforward, schema-based solution to model your application data with MongoDB.
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-//This TypeScript type definition describes the shape/structure of a User object. Each user has an _id, email, password, firstName, and lastName. All of these fields are strings
-//This is defining the structure of a User in our application. 
 const userSchema = new mongoose_1.default.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },

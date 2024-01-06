@@ -16,7 +16,22 @@ const express_1 = __importDefault(require("express"));
 const user_1 = __importDefault(require("../models/user"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const express_validator_1 = require("express-validator");
+const auth_1 = __importDefault(require("../middleware/auth"));
 const router = express_1.default.Router();
+router.get("/me", auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.userId;
+    try {
+        const user = yield user_1.default.findById(userId).select("-password");
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
+        }
+        res.json(user);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "something went wrong" });
+    }
+}));
 // /api/users/register
 router.post("/register", [
     // to basic form validation
