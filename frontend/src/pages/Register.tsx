@@ -101,6 +101,7 @@ const Register = () => {
                             const hasLowercase = /[a-z]/.test(value);
                             const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
                             const isNotEqualEmail = value !== email;
+                            const hasNumber = /\d/.test(value);
 
                             if (!hasUppercase) {
                                 return "Password must contain at least 1 uppercase letter";
@@ -113,6 +114,9 @@ const Register = () => {
                             }
                             if (!isNotEqualEmail) {
                                 return "Password must not be equal to email";
+                            }
+                            if (!hasNumber) {
+                                return "Password must contain at least 1 number";
                             }
                             return true;
                         },
