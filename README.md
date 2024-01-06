@@ -10,6 +10,10 @@
 Watch a video showcasing the project in action: 
 
 
+https://github.com/Kuwar20/Easy-Booking/assets/66473902/fecb30d8-f21c-4904-9c85-96857653a70b
+
+
+
 ## Prerequisites
 
 
