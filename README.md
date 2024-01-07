@@ -10,6 +10,11 @@
 Watch a video showcasing the project in action: 
 
 
+```plaintext
+# Project Demo Flow:
+
+Project UI -> Sign In -> Register -> Registration Validation -> Project Main Page -> Sign Out -> Sign In Check -> My Hotels Page Check -> Add Hotel -> Check Added Hotel in My Hotels Page -> Update Hotel -> Verify Added Hotel on Main Page -> Check Search Feature -> Check Sorting Among Saved Hotels -> Check Hotel Details from Search -> Try Booking Hotel without Selecting Dates -> Return to Hotel Page to Select Date -> Confirm Booking Test with Test Card Details for Stripe -> Go Back to Main Page and Check Booked Hotel -> Sign Out to Test Non-User Booking -> Sign In to Book (Show Instead of Book Now Button) -> End
+```
 https://github.com/Kuwar20/Easy-Booking/assets/66473902/fecb30d8-f21c-4904-9c85-96857653a70b
 
 
