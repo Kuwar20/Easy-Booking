@@ -80,7 +80,7 @@ configuration in your local environment.
 
 1. **Environment Files**: Navigate to the `backend` folder and create two files: `.env` and `.env.e2e`. Add the following contents to both files:
 
-   ```bash
+ ```env
     MONGODB_CONNECTION_STRING=
 
     JWT_SECRET_KEY=
@@ -93,18 +93,18 @@ configuration in your local environment.
 
     # Stripe
     STRIPE_API_KEY=
-    ```
+```
 ## Frontend Configuration
 
 1. **Environment Files**: Navigate to the `frontend` folder and create `.env` file. Add the following contents to both files:
 
-   ```bash
+  ```env
     #FRONTEND_URL
     VITE_API_BASE_URL=
 
     # Stripe
     VITE_STRIPE_PUB_KEY=
-    ``` 
+  ```
 Folder Structure 
 ============================
 
