@@ -51,6 +51,7 @@ const DetailsSection = () => {
                 <textarea
                     rows={10}
                     className="border rounded w-full py-1 px-2 font-normal"
+                    style={{ lineHeight: '1.2' }}
                     {...register("description", { required: "This field is required" })}
                 ></textarea>
                 {errors.description && (
@@ -84,7 +85,7 @@ const DetailsSection = () => {
                         <option value={num}>{num}</option>
                     ))}
                 </select> */}
-                
+
                 <select
                     {...register("starRating", {
                         required: "This field is required",

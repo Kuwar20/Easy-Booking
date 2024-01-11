@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
+import addDays from 'date-fns/addDays';
+import { FaUser } from 'react-icons/fa';
 import { useSearchContext } from "../../contexts/SearchContext";
 import { useAppContext } from "../../contexts/AppContext";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -68,7 +70,7 @@ const GuestInfoForm = ({ hotelId, pricePerNight }: Props) => {
 
     return (
         <div className="flex flex-col p-4 bg-blue-200 gap-4">
-            <h3 className="text-md font-bold">£{pricePerNight}</h3>
+            <h2 className="text-md font-bold">Price Per Night: ₹{pricePerNight}</h2>
             <form
                 onSubmit={
                     isLoggedIn ? handleSubmit(onSubmit) : handleSubmit(onSignInClick)
@@ -76,7 +78,7 @@ const GuestInfoForm = ({ hotelId, pricePerNight }: Props) => {
             >
                 <div className="grid grid-cols-1 gap-4 items-center">
                     <div>
-                        <DatePicker
+                    <label style={{ fontWeight: 'bold' }}>Check-in:</label>                        <DatePicker
                             required
                             selected={checkIn}
                             onChange={(date) => setValue("checkIn", date as Date)}
@@ -88,25 +90,28 @@ const GuestInfoForm = ({ hotelId, pricePerNight }: Props) => {
                             placeholderText="Check-in Date"
                             className="min-w-full bg-white p-2 focus:outline-none"
                             wrapperClassName="min-w-full"
+                            dateFormat="dd/MM/yyyy"
                         />
                     </div>
                     <div>
-                        <DatePicker
+                    <label style={{ fontWeight: 'bold' }}>Check-out:</label>                        <DatePicker
                             required
                             selected={checkOut}
                             onChange={(date) => setValue("checkOut", date as Date)}
                             selectsStart
                             startDate={checkIn}
                             endDate={checkOut}
-                            minDate={minDate}
+                            minDate={addDays(checkIn, 1)}
                             maxDate={maxDate}
-                            placeholderText="Check-in Date"
+                            placeholderText="Check-out Date"
                             className="min-w-full bg-white p-2 focus:outline-none"
                             wrapperClassName="min-w-full"
+                            dateFormat="dd/MM/yyyy" 
                         />
                     </div>
                     <div className="flex bg-white px-2 py-1 gap-2">
                         <label className="items-center flex">
+                        <FaUser size={24} style={{ marginRight: '10px' }} />
                             Adults:
                             <input
                                 className="w-full p-1 focus:outline-none font-bold"
@@ -124,6 +129,7 @@ const GuestInfoForm = ({ hotelId, pricePerNight }: Props) => {
                             />
                         </label>
                         <label className="items-center flex">
+                        <FaUser size={22} style={{ marginRight: '10px' }} />
                             Children:
                             <input
                                 className="w-full p-1 focus:outline-none font-bold"

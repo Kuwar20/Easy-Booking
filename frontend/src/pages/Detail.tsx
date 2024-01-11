@@ -41,18 +41,22 @@ const Detail = () => {
                     </div>
                 ))}
             </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-2">
+            <br />
+            <label style={{ fontWeight: 'bold' }}>Amenities:</label>
+            <div className="grid grid-cols-1 text-center lg:grid-cols-4 gap-2">
                 {hotel.facilities.map((facility) => (
                     <div className="border border-slate-300 rounded-sm p-3">
                         {facility}
                     </div>
                 ))}
             </div>
-
             <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr]">
-                <div className="whitespace-pre-line">{hotel.description}</div>
+                <div className="whitespace-pre-line">
+                    <label style={{ fontWeight: 'bold' }}>Description:</label>
+                    <br />
+                    {hotel.description}</div>
                 <div className="h-fit">
+                    <br />
                     <GuestInfoForm
                         pricePerNight={hotel.pricePerNight}
                         hotelId={hotel._id}

@@ -125,15 +125,16 @@ const BookingForm = ({ currentUser, paymentIntent }: Props) => {
 
                 <div className="bg-blue-200 p-4 rounded-md">
                     <div className="font-semibold text-lg">
-                        Total Cost: £{paymentIntent.totalCost.toFixed(2)}
+                        Total Cost: ₹{paymentIntent.totalCost.toFixed(2)}
                     </div>
-                    <div className="text-xs">Includes taxes and charges</div>
+                    <div className="text-xs">&nbsp;Includes taxes and charges</div>
                 </div>
             </div>
 
             <div className="space-y-2">
-                <h3 className="text-xl font-semibold"> Payment Details</h3>
-                <CardElement
+                <h3 className="text-xl font-semibold">
+                    Payment Details <span className="text-red-500">*</span>
+                </h3><CardElement
                     id="payment-element"
                     className="border rounded-md p-2 text-sm"
                 />
