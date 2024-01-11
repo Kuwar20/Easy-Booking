@@ -4,6 +4,8 @@ import { MdTravelExplore } from "react-icons/md";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from "react-router-dom";
+import { FaRegCalendarAlt } from 'react-icons/fa';
+import React from "react";
 
 const SearchBar = () => {
     const navigate = useNavigate();
@@ -30,6 +32,13 @@ const SearchBar = () => {
     const minDate = new Date();
     const maxDate = new Date();
     maxDate.setFullYear(maxDate.getFullYear() + 1);
+
+    const CustomInput = React.forwardRef(({ value, onClick }: any, ref: any) => (
+        <button className="w-full min-w-0 bg-white p-2 focus:outline-none flex items-center" onClick={onClick} ref={ref}>
+            <FaRegCalendarAlt className="mr-2" style={{ fontSize: '20px', marginRight: '10px' }} />
+            {value}
+        </button>
+    ));
 
     return (
         <form
@@ -70,7 +79,7 @@ const SearchBar = () => {
                     />
                 </label>
             </div>
-            <div>
+            <div className="flex items-center">
                 <DatePicker
                     selected={checkIn}
                     onChange={(date) => setCheckIn(date as Date)}
@@ -80,6 +89,7 @@ const SearchBar = () => {
                     minDate={minDate}
                     maxDate={maxDate}
                     placeholderText="Check-in Date"
+                    customInput={<CustomInput />}
                     className="w-full min-w-0 bg-white p-2 focus:outline-none"
                     wrapperClassName="min-w-full"
                 />
@@ -94,6 +104,7 @@ const SearchBar = () => {
                     minDate={minDate}
                     maxDate={maxDate}
                     placeholderText="Check-out Date"
+                    customInput={<CustomInput />}
                     className="w-full min-w-0 bg-white p-2 focus:outline-none"
                     wrapperClassName="min-w-full"
                 />
