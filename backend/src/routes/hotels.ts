@@ -3,13 +3,13 @@ import Hotel from "../models/hotel";
 import { BookingType, HotelSearchResponse } from "../shared/types";
 import { param, validationResult } from "express-validator";
 import Stripe from "stripe";
-import verifyToken from "../middleware/auth";
+import verifyToken, { cacheMiddleware } from "../middleware/auth";
 
 const stripe = new Stripe(process.env.STRIPE_API_KEY as string);
 
 const router = express.Router();
 
-router.get("/search", async (req: Request, res: Response) => {
+router.get("/search", cacheMiddleware, async (req: Request, res: Response) => {
     try {
         const query = constructSearchQuery(req.query);
 
@@ -55,7 +55,7 @@ router.get("/search", async (req: Request, res: Response) => {
     }
 });
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", cacheMiddleware, async (req: Request, res: Response) => {
     try {
         const hotels = await Hotel.find().sort("-lastUpdated");
         res.json(hotels);
@@ -181,7 +181,7 @@ const constructSearchQuery = (queryParams: any) => {
 
     if (queryParams.destination) {
         constructedQuery.$or = [
-            { name: new RegExp(queryParams.destination, "i")},
+            { name: new RegExp(queryParams.destination, "i") },
             { city: new RegExp(queryParams.destination, "i") },
             { country: new RegExp(queryParams.destination, "i") },
         ];
