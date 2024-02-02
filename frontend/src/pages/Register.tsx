@@ -3,6 +3,8 @@ import { useMutation, useQueryClient } from "react-query";
 import * as apiClient from "../api-client"
 import { useAppContext } from "../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
+import { JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useState } from 'react';
+import Autosuggest from 'react-autosuggest';
 
 export type RegisterFormData = {
     firstName: string;
@@ -18,6 +20,27 @@ const Register = () => {
     const navigate = useNavigate();
     const { showToast } = useAppContext();
     const { register, watch, handleSubmit, formState: { errors }, } = useForm<RegisterFormData>();
+    const [email, setEmail] = useState('');
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+    
+    const onEmailChange = (_event: any, { newValue }: any) => {
+        setEmail(newValue);
+    };
+
+    const getSuggestions = (value: string) => {
+        const inputValue = value.trim().toLowerCase();
+        const inputLength = inputValue.length;
+
+        const emailProviders = ['gmail.com','icloud.com', 'yahoo.com', 'outlook.com',];
+
+        return inputLength === 0 ? [] : emailProviders.map(provider => `${inputValue}@${provider}`);
+    };
+
+    const renderSuggestion = (suggestion: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined) => (
+        <div>
+            {suggestion}
+        </div>
+    );
 
     const mutation = useMutation(apiClient.register, {
         onSuccess: async () => {
@@ -73,10 +96,18 @@ const Register = () => {
             <label className="text-grey-700 text-sm font-bold flex-1">
                 Email
                 <span className="text-red-500">*</span>
-                <input
-                    type="email"
-                    className="border rounded w-full py-1 px-2 font-normal"
-                    {...register("email", { required: "Email is required" })}
+                <Autosuggest
+                    suggestions={suggestions}
+                    onSuggestionsFetchRequested={({ value }) => setSuggestions(getSuggestions(value))}
+                    onSuggestionsClearRequested={() => setSuggestions([])}
+                    getSuggestionValue={suggestion => suggestion}
+                    renderSuggestion={renderSuggestion}
+                    inputProps={{
+                        placeholder: 'Email',
+                        value: email,
+                        onChange: onEmailChange,
+                        className: "border rounded w-full py-1 px-2 font-normal", // Add this line
+                    }}
                 />
                 {errors.email && (
                     <span className="text-red-500">{errors.email.message}</span>
