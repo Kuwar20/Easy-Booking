@@ -9,8 +9,10 @@ lerna-debug.log*
 
 node_modules
 .env
+dist
 dist-ssr
 *.local
+dist
 
 # Editor directories and files
 .vscode/*
@@ -22,3 +24,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.gitattributes   # Ignore .gitattributes file

@@ -22,37 +22,7 @@ router.get("/me", verifyToken, async (req: Request, res: Response) => {
 
 // /api/users/register
 router.post("/register", [
-
-    // to basic form validation
-    // check("firstName", "First Name is required").isString().not().isEmpty(),
-
-    // problem is this is when it gets an condition(here error) it will stop checking the other conditions
-    // check("firstName").custom((value, { req }) => {
-    //     if (!value) {
-    //         throw new Error("Firstname is required");
-    //     } else if (value === req.body.email) {
-    //         throw new Error("Firstname cannot be the same as the email");
-    //     } else if (value === req.body.password) {
-    //         throw new Error("Firstname cannot be the same as the password");
-    //     } else if (value === req.body.lastName) {
-    //         throw new Error("Firstname cannot be the same as the lastName");
-    //     }
-    //     return true;
-    // }).not().isEmpty(),
-
-    // check("lastName").custom((value, { req }) => {
-    //     if (!value) {
-    //         throw new Error("LastName is required");
-    //     } else if (value === req.body.email) {
-    //         throw new Error("LastName cannot be the same as the email");
-    //     } else if (value === req.body.password) {
-    //         throw new Error("LastName cannot be the same as the password");
-    //     } else if (value === req.body.firstName) {
-    //         throw new Error("LastName cannot be the same as the firstName");
-    //     }
-    //     return true;
-    // }).not().isEmpty(),
-
+    
     check("firstName").custom((value, { req }) => {
         const errors: string[] = [];
 

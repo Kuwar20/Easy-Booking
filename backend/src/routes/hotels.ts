@@ -92,6 +92,7 @@ router.post(
     async (req: Request, res: Response) => {
         const { numberOfNights } = req.body;
         const hotelId = req.params.hotelId;
+        const userId = req.userId;
 
         const hotel = await Hotel.findById(hotelId);
         if (!hotel) {
@@ -103,6 +104,7 @@ router.post(
         const paymentIntent = await stripe.paymentIntents.create({
             amount: totalCost * 100,
             currency: "gbp",
+            description: `Payment for ${numberOfNights} nights at ${hotel.name}`,
             metadata: {
                 hotelId,
                 userId: req.userId,
