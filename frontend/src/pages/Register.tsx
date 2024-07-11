@@ -88,9 +88,9 @@ const Register = () => {
     });
 
     return (
-        <div className='min-h-[calc(100vh-20rem)] flex flex-col justify-center'>
-            <div className='bg-white sm:mx-auto sm:max-w-md sm:w-full py-8 px-4 sm:px-10 sm:rounded-md shadow'>
-                <form className='flex flex-col gap-5' onSubmit={onSubmit}>
+        <div className="min-h-[calc(100vh-25rem)] flex items-center justify-center py-1 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow">
+            <form className='flex flex-col gap-5' onSubmit={onSubmit}>
                     <h2 className='mb-1 text-3xl font-bold text-center'>Create an Account</h2>
                     <div className="flex flex-col md:flex-row gap-5">
                         <label className="text-grey-700 text-sm font-bold flex-1">
@@ -253,7 +253,7 @@ const Register = () => {
                             disabled={isLoading}
                             className={`w-full p-2 rounded-md transition-colors duration-200 ${isLoading
                                 ? 'bg-gray-400 cursor-not-allowed'
-                                : 'bg-green-500 hover:bg-green-700 text-white'
+                                : 'bg-green-600 hover:bg-green-700 text-white font-bold'
                                 }`}
                         >
                             {isLoading ? 'Loading...' : 'Create Account'}
