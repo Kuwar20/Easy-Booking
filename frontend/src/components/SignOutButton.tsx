@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "react-query";
 import * as apiClient from "../api-client";
 import { useAppContext } from "../contexts/AppContext";
+import { FaSignOutAlt } from 'react-icons/fa';
 
 const SignOutButton = () => {
     const queryClient = useQueryClient();
@@ -23,9 +24,10 @@ const SignOutButton = () => {
     return (
         <button
             onClick={handleClick}
-            className="text-blue-600 px-3 font-bold bg-white hover:bg-gray-200"
+            className="bg-white text-blue-600 px-4 py-2 rounded-md font-semibold hover:bg-blue-100 hover:text-blue-700 transition duration-200 flex items-center shadow-md"
         >
             Sign Out
+            <FaSignOutAlt className="ml-2" />
         </button>
     );
 };

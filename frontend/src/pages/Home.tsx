@@ -1,3 +1,38 @@
+// import { useQuery } from "react-query";
+// import * as apiClient from "../api-client";
+// import LatestDestinationCard from "../components/LastestDestinationCard";
+
+// const Home = () => {
+//     const { data: hotels } = useQuery("fetchQuery", () =>
+//         apiClient.fetchHotels()
+//     );
+
+//     const topRowHotels = hotels?.slice(0, 2) || [];
+//     const bottomRowHotels = hotels?.slice(2) || [];
+
+//     return (
+//         <div className="space-y-3">
+//             <h2 className="text-3xl font-bold">Latest Destinations</h2>
+//             <p>Most recent desinations added by our hosts</p>
+//             <div className="grid gap-4">
+//                 <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+//                     {topRowHotels.map((hotel, index) => (
+//                         <LatestDestinationCard key={index} hotel={hotel} />
+//                     ))}
+//                 </div>
+
+//                 <div className="grid md:grid-cols-3 gap-4">
+//                     {bottomRowHotels.map((hotel, index) => (
+//                         <LatestDestinationCard key={index} hotel={hotel} />
+//                     ))}
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default Home;
+
 import { useQuery } from "react-query";
 import * as apiClient from "../api-client";
 import LatestDestinationCard from "../components/LastestDestinationCard";
@@ -11,19 +46,25 @@ const Home = () => {
     const bottomRowHotels = hotels?.slice(2) || [];
 
     return (
-        <div className="space-y-3">
-            <h2 className="text-3xl font-bold">Latest Destinations</h2>
-            <p>Most recent desinations added by our hosts</p>
-            <div className="grid gap-4">
-                <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+        <div className="max-w-6xl mx-auto px-3 py-2">
+            <div className="text-center mb-6">
+                <h2 className="text-4xl font-bold text-gray-800 mb-2">Latest Destinations</h2>
+                <p className="text-xl text-gray-600">Most recent destinations added by our hosts</p>
+            </div>
+            <div className="space-y-12">
+                <div className="grid md:grid-cols-2 gap-8">
                     {topRowHotels.map((hotel, index) => (
-                        <LatestDestinationCard key={index} hotel={hotel} />
+                        <div key={index} className="transform transition duration-500 hover:scale-105">
+                            <LatestDestinationCard hotel={hotel} />
+                        </div>
                     ))}
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-4">
+                <div className="grid md:grid-cols-3 gap-8">
                     {bottomRowHotels.map((hotel, index) => (
-                        <LatestDestinationCard key={index} hotel={hotel} />
+                        <div key={index} className="transform transition duration-500 hover:scale-105">
+                            <LatestDestinationCard hotel={hotel} />
+                        </div>
                     ))}
                 </div>
             </div>
