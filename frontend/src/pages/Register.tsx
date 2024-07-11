@@ -251,7 +251,7 @@ const Register = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className={`w-full p-2 rounded-md transition-colors duration-200 ${isLoading
+                            className={`w-full p-2.5 rounded-md transition-colors duration-200 ${isLoading
                                 ? 'bg-gray-400 cursor-not-allowed'
                                 : 'bg-green-600 hover:bg-green-700 text-white font-bold'
                                 }`}
