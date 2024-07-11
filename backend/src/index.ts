@@ -6,7 +6,7 @@ import userRoutes from "./routes/user";
 import authRoutes from "./routes/auth";
 import cookieParser from "cookie-parser";
 import path from "path";
-import { v2 as cloudinary} from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 import myHotelRoutes from "./routes/my-hotels";
 import hotelRoutes from "./routes/hotels";
 import bookingRoutes from "./routes/my-bookings";
@@ -17,7 +17,12 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+const PORT = process.env.PORT || 7001;
+
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string)
+    .then((c) => console.log(`Connected to ${c.connections[0].name} database`))
+    .catch((err) => console.log(`Error connecting to database: ${err.message}`))
+
 
 const app = express();
 app.use(cookieParser());
@@ -38,6 +43,34 @@ app.use(
 // });
 
 
+import logger from '../logger';
+import morgan from 'morgan';
+
+// Define a type for the log object
+interface LogObject {
+    method: string;
+    url: string;
+    status: string;
+    responseTime: string;
+}
+
+const morganFormat = ':method :url :status :response-time ms';
+
+app.use(morgan(morganFormat, {
+    stream: {
+        write: (message: string) => {
+            const [method, url, status, responseTime] = message.trim().split(' ');
+            const logObject: LogObject = {
+                method,
+                url,
+                status,
+                responseTime,
+            };
+            logger.info(JSON.stringify(logObject));
+        }
+    }
+}));
+
 app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
 app.use("/api/auth", authRoutes);
@@ -53,8 +86,8 @@ app.get("*", (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
 });
 
-app.listen(7000, () => {
-    console.log("Server is running on port 7000");
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
 
 

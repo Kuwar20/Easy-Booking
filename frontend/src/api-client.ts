@@ -25,9 +25,21 @@ export const register = async (formData: RegisterFormData) => {
         body: JSON.stringify(formData),
     });
     const responseBody = await response.json();
+    console.log(responseBody);
     if (!response.ok) {
-        throw new Error(responseBody.message);
+        // Check if responseBody.errors exists and is an array
+        if (responseBody.errors && Array.isArray(responseBody.errors)) {
+            // Map through each error object and collect error messages
+            const errorMessages = responseBody.errors.map((error: any) => error.msg).join(', ');
+            // Throw a new error with the collected messages
+            throw new Error(errorMessages);
+        } else {
+            // Fallback to throwing a generic error if no specific errors found
+            throw new Error('Registration failed. Please try again.');
+        }
     }
+
+    return responseBody;
 };
 
 export const signIn = async (FormData: SignInFormData) => {

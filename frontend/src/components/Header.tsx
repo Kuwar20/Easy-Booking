@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import HeaderIcon from '../assets/review.png';
 import { useAppContext } from '../contexts/AppContext';
 import SignOutButton from './SignOutButton';
 
@@ -10,7 +9,6 @@ const Header = () => {
         <div className='bg-blue-700 py-4 md:py-6'>
             <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
                 <span className='text-xl md:text-3xl text-white font-bold tracking-tight md:ml-4 flex items-center mb-2 md:mb-0'>
-                    <img src={HeaderIcon} className="w-8 h-8 md:w-12 md:h-12 mr-2" />
                     <Link to="/" className="md:relative">
                         <span className="md:absolute -top-2 text-white">Booking</span>
                     </Link>
