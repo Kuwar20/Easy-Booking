@@ -34,33 +34,6 @@ router.get("/me", auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0
 }));
 // /api/users/register
 router.post("/register", [
-    // to basic form validation
-    // check("firstName", "First Name is required").isString().not().isEmpty(),
-    // problem is this is when it gets an condition(here error) it will stop checking the other conditions
-    // check("firstName").custom((value, { req }) => {
-    //     if (!value) {
-    //         throw new Error("Firstname is required");
-    //     } else if (value === req.body.email) {
-    //         throw new Error("Firstname cannot be the same as the email");
-    //     } else if (value === req.body.password) {
-    //         throw new Error("Firstname cannot be the same as the password");
-    //     } else if (value === req.body.lastName) {
-    //         throw new Error("Firstname cannot be the same as the lastName");
-    //     }
-    //     return true;
-    // }).not().isEmpty(),
-    // check("lastName").custom((value, { req }) => {
-    //     if (!value) {
-    //         throw new Error("LastName is required");
-    //     } else if (value === req.body.email) {
-    //         throw new Error("LastName cannot be the same as the email");
-    //     } else if (value === req.body.password) {
-    //         throw new Error("LastName cannot be the same as the password");
-    //     } else if (value === req.body.firstName) {
-    //         throw new Error("LastName cannot be the same as the firstName");
-    //     }
-    //     return true;
-    // }).not().isEmpty(),
     (0, express_validator_1.check)("firstName").custom((value, { req }) => {
         const errors = [];
         if (!value) {
@@ -164,7 +137,8 @@ router.post("/register", [
         return res.status(200).send({ message: "User registered OK" }); // without json() it will not return anything when we hit the api, even though the api is working fine
     }
     catch (error) {
-        res.status(500).json({ message: "Something went wrong" });
+        console.log(error);
+        res.status(500).json({ message: "Something went wrong", error });
     }
 }));
 exports.default = router;

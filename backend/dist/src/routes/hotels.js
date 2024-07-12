@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -16,10 +39,10 @@ const express_1 = __importDefault(require("express"));
 const hotel_1 = __importDefault(require("../models/hotel"));
 const express_validator_1 = require("express-validator");
 const stripe_1 = __importDefault(require("stripe"));
-const auth_1 = __importDefault(require("../middleware/auth"));
+const auth_1 = __importStar(require("../middleware/auth"));
 const stripe = new stripe_1.default(process.env.STRIPE_API_KEY);
 const router = express_1.default.Router();
-router.get("/search", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/search", auth_1.cacheMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const query = constructSearchQuery(req.query);
         let sortOptions = {};
@@ -57,7 +80,25 @@ router.get("/search", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(500).json({ message: "Something went wrong" });
     }
 }));
-router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/search/suggestion/:query', auth_1.cacheMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = req.params.query.trim(); // Get the search query from the URL
+    console.log('Search Query:', query); // Check the value of query
+    try {
+        const hotels = yield hotel_1.default.find({
+            $or: [
+                { name: { $regex: query, $options: "i" } },
+                { city: { $regex: query, $options: "i" } },
+                { country: { $regex: query, $options: "i" } },
+            ],
+        }).limit(5);
+        res.status(200).json(hotels);
+    }
+    catch (error) {
+        console.error('Error searching hotels:', error); // Log any errors
+        res.status(500).json({ message: "Error searching hotels" });
+    }
+}));
+router.get("/", auth_1.cacheMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const hotels = yield hotel_1.default.find().sort("-lastUpdated");
         res.json(hotels);
@@ -85,6 +126,7 @@ router.get("/:id", [(0, express_validator_1.param)("id").notEmpty().withMessage(
 router.post("/:hotelId/bookings/payment-intent", auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { numberOfNights } = req.body;
     const hotelId = req.params.hotelId;
+    const userId = req.userId;
     const hotel = yield hotel_1.default.findById(hotelId);
     if (!hotel) {
         return res.status(400).json({ message: "Hotel not found" });
@@ -93,6 +135,7 @@ router.post("/:hotelId/bookings/payment-intent", auth_1.default, (req, res) => _
     const paymentIntent = yield stripe.paymentIntents.create({
         amount: totalCost * 100,
         currency: "gbp",
+        description: `Payment for ${numberOfNights} nights at ${hotel.name}`,
         metadata: {
             hotelId,
             userId: req.userId,
@@ -143,6 +186,7 @@ const constructSearchQuery = (queryParams) => {
     let constructedQuery = {};
     if (queryParams.destination) {
         constructedQuery.$or = [
+            { name: new RegExp(queryParams.destination, "i") },
             { city: new RegExp(queryParams.destination, "i") },
             { country: new RegExp(queryParams.destination, "i") },
         ];
