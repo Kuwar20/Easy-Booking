@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppContext } from '../contexts/AppContext';
 import SignOutButton from './SignOutButton';
-import { FaHotel, FaBookmark, FaUser } from 'react-icons/fa';
+import { FaHotel, FaBookmark, FaUser, FaBars } from 'react-icons/fa';
 
 const Header = () => {
     const { isLoggedIn } = useAppContext();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
         <header className='bg-blue-700 py-4 shadow-lg'>
@@ -17,7 +19,7 @@ const Header = () => {
                     </Link>
                     <nav className='flex items-center space-x-4'>
                         {isLoggedIn ? (
-                            <div className="flex items-center space-x-4">
+                            <div className="hidden sm:flex items-center space-x-4">
                                 <Link 
                                     className='text-white hover:bg-blue-600 px-3 py-2 rounded-md transition duration-300 flex items-center' 
                                     to="/my-bookings"
@@ -44,7 +46,36 @@ const Header = () => {
                             </Link>
                         )}
                     </nav>
+                    {isLoggedIn && (
+                        <div className="sm:hidden flex items-center">
+                            <button 
+                                onClick={() => setIsMenuOpen(!isMenuOpen)} 
+                                className="text-white hover:bg-blue-600 p-2 rounded-md transition duration-300"
+                            >
+                                <FaBars size={20} />
+                            </button>
+                        </div>
+                    )}
                 </div>
+                {isMenuOpen && (
+                    <div className="sm:hidden flex flex-col items-center mt-4 space-y-2">
+                        <Link 
+                            className='text-white hover:bg-blue-600 px-3 py-2 rounded-md transition duration-300 flex items-center' 
+                            to="/my-bookings"
+                        >
+                            <FaBookmark className="mr-2" />
+                            My Bookings
+                        </Link>
+                        <Link 
+                            className='text-white hover:bg-blue-600 px-3 py-2 rounded-md transition duration-300 flex items-center' 
+                            to="/my-hotels"
+                        >
+                            <FaHotel className="mr-2" />
+                            My Hotels
+                        </Link>
+                        <SignOutButton />
+                    </div>
+                )}
             </div>
         </header>
     );
