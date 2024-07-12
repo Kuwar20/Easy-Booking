@@ -35,10 +35,13 @@ const SearchBar = () => {
                         )
                         .map(hotel => {
                             if (hotel.name.toLowerCase().includes(value.toLowerCase())) {
+                                console.log(hotel.name);
                                 return hotel.name;
                             } else if (hotel.city.toLowerCase().includes(value.toLowerCase())) {
+                                console.log(hotel.city, hotel.country);
                                 return `${hotel.city}, ${hotel.country}`;
                             } else {
+                                console.log(hotel.country);
                                 return hotel.country;
                             }
                         });
