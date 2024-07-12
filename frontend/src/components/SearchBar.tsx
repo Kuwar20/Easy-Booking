@@ -28,9 +28,21 @@ const SearchBar = () => {
                 const suggestionsData = await searchHotelSuggestions(value);
                 if (suggestionsData.length > 0) {
                     const matchingSuggestions = suggestionsData
-                        .filter(hotel => hotel.name.toLowerCase().includes(value.toLowerCase()))
-                        .map(hotel => hotel.name);
-                    setSuggestions(matchingSuggestions);
+                        .filter(hotel =>
+                            hotel.name.toLowerCase().includes(value.toLowerCase()) ||
+                            hotel.city.toLowerCase().includes(value.toLowerCase()) ||
+                            hotel.country.toLowerCase().includes(value.toLowerCase())
+                        )
+                        .map(hotel => {
+                            if (hotel.name.toLowerCase().includes(value.toLowerCase())) {
+                                return hotel.name;
+                            } else if (hotel.city.toLowerCase().includes(value.toLowerCase())) {
+                                return `${hotel.city}, ${hotel.country}`;
+                            } else {
+                                return hotel.country;
+                            }
+                        });
+                    setSuggestions([...new Set(matchingSuggestions)]);
                 } else {
                     setSuggestions([]);
                 }
