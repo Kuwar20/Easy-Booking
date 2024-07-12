@@ -17,7 +17,7 @@ const Header = () => {
                     </Link>
                     <nav className='flex items-center space-x-4'>
                         {isLoggedIn ? (
-                            <>
+                            <div className="flex items-center space-x-4">
                                 <Link 
                                     className='text-white hover:bg-blue-600 px-3 py-2 rounded-md transition duration-300 flex items-center' 
                                     to="/my-bookings"
@@ -33,7 +33,7 @@ const Header = () => {
                                     My Hotels
                                 </Link>
                                 <SignOutButton />
-                            </>
+                            </div>
                         ) : (
                             <Link 
                                 to="/sign-in"

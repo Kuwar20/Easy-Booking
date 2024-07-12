@@ -135,7 +135,7 @@ const SignIn = () => {
                             className={`mt-2 bg-blue-600 text-white font-bold w-full p-2 rounded-md transition-colors duration-200 ${loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-500"
                                 }`}
                         >
-                            {loading ? "<Loading..." : "Login"}
+                            {loading ? "Loading..." : "Login"}
                         </button>
                         <div className="text-sm mt-4">
                             Not Registered?{" "}
