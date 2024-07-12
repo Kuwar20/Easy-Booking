@@ -53,8 +53,14 @@ export const signIn = async (FormData: SignInFormData) => {
     });
     const body = await response.json();
     if (!response.ok) {
-        throw new Error(body.message);
+        console.log(body);
+        if (body.message && Array.isArray(body.message) && body.message.length > 0) {
+            throw new Error(body.message[0].msg || 'An error occurred during sign in');
+        } else {
+            throw new Error(body.message || 'An error occurred during sign in');
+        }
     }
+    
     return body;
 };
 

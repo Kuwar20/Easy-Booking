@@ -17,6 +17,7 @@ const Search = () => {
     const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
     const [selectedPrice, setSelectedPrice] = useState<number | undefined>();
     const [sortOption, setSortOption] = useState<string>("");
+    const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 
     const searchParams = {
         destination: search.destination,
@@ -38,7 +39,6 @@ const Search = () => {
 
     const handleStarsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const starRating = event.target.value;
-
         setSelectedStars((prevStars) =>
             event.target.checked
                 ? [...prevStars, starRating]
@@ -46,11 +46,8 @@ const Search = () => {
         );
     };
 
-    const handleHotelTypeChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    const handleHotelTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const hotelType = event.target.value;
-
         setSelectedHotelTypes((prevHotelTypes) =>
             event.target.checked
                 ? [...prevHotelTypes, hotelType]
@@ -60,7 +57,6 @@ const Search = () => {
 
     const handleFacilityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const facility = event.target.value;
-
         setSelectedFacilities((prevFacilities) =>
             event.target.checked
                 ? [...prevFacilities, facility]
@@ -69,9 +65,18 @@ const Search = () => {
     };
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-5">
-            <div className="lg:sticky lg:top-10">
-                <div className="rounded-lg border border-slate-300 p-5 h-fit">
+        <div className="grid grid-cols-1 gap-5 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-4">
+                <button
+                    onClick={() => setIsFilterOpen(!isFilterOpen)}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                >
+                    {isFilterOpen ? "Hide Filters" : "Show Filters"}
+                </button>
+            </div>
+            
+            {isFilterOpen && (
+                <div className="bg-white shadow-md rounded-lg border border-slate-300 p-5">
                     <div className="space-y-5">
                         <h3 className="text-lg font-semibold border-b border-slate-300 pb-5">
                             Filter by:
@@ -94,17 +99,18 @@ const Search = () => {
                         />
                     </div>
                 </div>
-            </div>
+            )}
+
             <div className="flex flex-col gap-5">
-                <div className="flex justify-between items-center">
-                    <span className="text-xl font-bold">
+                <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+                    <span className="text-xl font-bold mb-2 sm:mb-0">
                         {hotelData?.pagination.total} Hotels found
                         {search.destination ? ` in ${search.destination}` : ""}
                     </span>
                     <select
                         value={sortOption}
                         onChange={(event) => setSortOption(event.target.value)}
-                        className="p-2 border rounded-md"
+                        className="p-2 border rounded-md w-full sm:w-auto"
                     >
                         <option value="">Sort By</option>
                         <option value="starRating">Star Rating</option>
@@ -116,10 +122,12 @@ const Search = () => {
                         </option>
                     </select>
                 </div>
-                {hotelData?.data.map((hotel) => (
-                    <SearchResultsCard key={hotel._id} hotel={hotel} />
-                ))}
-                <div>
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    {hotelData?.data.map((hotel) => (
+                        <SearchResultsCard key={hotel._id} hotel={hotel} />
+                    ))}
+                </div>
+                <div className="mt-6">
                     <Pagination
                         page={hotelData?.pagination.page || 1}
                         pages={hotelData?.pagination.pages || 1}
