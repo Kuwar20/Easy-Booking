@@ -382,7 +382,6 @@
 
 // export default SearchBar;
 
-
 import React, { FormEvent, useState, useRef } from "react";
 import { useSearchContext } from "../contexts/SearchContext";
 import { MdTravelExplore } from "react-icons/md";
@@ -390,7 +389,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from "react-router-dom";
 import { FaRegCalendarAlt } from 'react-icons/fa';
-import { useMutation } from "react-query"; // Import useMutation
+import { useMutation } from "react-query";
 import * as apiClient from "../api-client";
 
 const SearchBar = () => {
@@ -405,9 +404,9 @@ const SearchBar = () => {
     const [childCount, setChildCount] = useState<number>(search.childCount);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // Define the mutation function
     const { mutate: searchMutation } = useMutation(apiClient.searchHotelSuggestions, {
         onSuccess: (data: any) => {
+            console.log('API response:', data);
             if (data.length > 0) {
                 const matchingSuggestions = data
                     .filter((hotel: { name: string; city: string; country: string; }) =>
@@ -435,12 +434,17 @@ const SearchBar = () => {
         }
     });
 
-    const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSearchInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setDestination(value);
 
         if (value.length >= 2) {
-            searchMutation(value);
+            try {
+                searchMutation(value);
+            } catch (error) {
+                console.error("Error fetching suggestions:", error);
+                setSuggestions([]);
+            }
         } else {
             setSuggestions([]);
         }
