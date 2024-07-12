@@ -55,6 +55,28 @@ router.get("/search", cacheMiddleware, async (req: Request, res: Response) => {
     }
 });
 
+router.get('/search/suggestion/:query', async(req: Request, res: Response)=>{
+    const query = req.params.query.trim(); // Get the search query from the URL
+    console.log('Search Query:', query); // Check the value of query
+    
+        try {
+            const hotels = await Hotel.find({
+                $or: [
+                    { name: { $regex: query, $options: "i" } },
+                    { city: { $regex: query, $options: "i" } },
+                    { country: { $regex: query, $options: "i" } },
+                ],
+            }).limit(5);
+    
+            res.status(200).json(hotels);
+        } catch (error) {
+            console.error('Error searching hotels:', error); // Log any errors
+    
+            res.status(500).json({ message: "Error searching hotels" });
+        }
+    });
+
+
 router.get("/", cacheMiddleware, async (req: Request, res: Response) => {
     try {
         const hotels = await Hotel.find().sort("-lastUpdated");

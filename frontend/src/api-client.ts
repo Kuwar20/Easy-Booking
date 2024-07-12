@@ -187,6 +187,17 @@ export const searchHotels = async (
     return response.json();
 };
 
+export const searchHotelSuggestions = async (query: string): Promise<HotelType[]> => {
+        const response = await fetch(`${API_BASE_URL}/api/hotels/search/suggestion/${query}`, {
+            credentials: 'include',
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch hotel suggestions');
+        }
+        return response.json();
+};
+
 export const fetchHotelById = async (hotelId: string): Promise<HotelType> => {
     const response = await fetch(`${API_BASE_URL}/api/hotels/${hotelId}`);
     if (!response.ok) {
