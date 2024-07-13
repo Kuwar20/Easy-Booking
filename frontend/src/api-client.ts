@@ -197,9 +197,15 @@ export const searchHotels = async (
 //     }
 //     return response.json();
 // };
-export const searchHotelSuggestions = async (query: string): Promise<HotelType> => {
+export const searchHotelSuggestions = async (query: string): Promise<HotelType[]> => {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/hotels/search/suggestion/${query}`);
+        const response = await fetch(`${API_BASE_URL}/api/hotels/search/suggestion/${query}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
         console.log('Full API Response:', response);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
