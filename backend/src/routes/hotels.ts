@@ -56,11 +56,11 @@ router.get("/search", cacheMiddleware, async (req: Request, res: Response) => {
 });
 
 router.get('/search/suggestion/:query', cacheMiddleware, async (req: Request, res: Response) => {
-    const query = req.params.query.trim(); // Get the search query from the URL
+    let query = req.params.query.trim(); // Get the search query from the URL
     console.log('Search Query:', query); // Check the value of query
 
     try {
-        const hotels = await Hotel.find({
+        let hotels = await Hotel.find({
             $or: [
                 { name: { $regex: query, $options: "i" } },
                 { city: { $regex: query, $options: "i" } },

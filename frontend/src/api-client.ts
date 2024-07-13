@@ -197,7 +197,7 @@ export const searchHotels = async (
 //     }
 //     return response.json();
 // };
-export const searchHotelSuggestions = async (query: string): Promise<HotelType[]> => {
+export const searchHotelSuggestions = async (query: string) => {
     try {
         const response = await fetch(`${API_BASE_URL}/api/hotels/search/suggestion/${query}`, {
             method: 'GET',
