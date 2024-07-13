@@ -60,7 +60,7 @@ export const signIn = async (FormData: SignInFormData) => {
             throw new Error(body.message || 'An error occurred during sign in');
         }
     }
-    
+
     return body;
 };
 
@@ -187,15 +187,30 @@ export const searchHotels = async (
     return response.json();
 };
 
-export const searchHotelSuggestions = async (query: string): Promise<HotelType[]> => {
-        const response = await fetch(`${API_BASE_URL}/api/hotels/search/suggestion/${query}`, {
-            credentials: 'include',
-        });
+// export const searchHotelSuggestions = async (query: string): Promise<HotelType[]> => {
+//     const response = await fetch(`${API_BASE_URL}/api/hotels/search/suggestion/${query}`, {
+//         credentials: 'include',
+//     });
 
+//     if (!response.ok) {
+//         throw new Error('Failed to fetch hotel suggestions');
+//     }
+//     return response.json();
+// };
+export const searchHotelSuggestions = async (query: string): Promise<HotelType> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/hotels/search/suggestion/${query}`);
+        console.log('Full API Response:', response);
         if (!response.ok) {
-            throw new Error('Failed to fetch hotel suggestions');
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return response.json();
+        const text = await response.json();
+        console.log('Response text:', text);
+        return text;
+    } catch (error) {
+        console.error('Error in searchHotelSuggestions:', error);
+        throw error;
+    }
 };
 
 export const fetchHotelById = async (hotelId: string): Promise<HotelType> => {
