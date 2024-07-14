@@ -4,10 +4,20 @@ import { BookingType, HotelSearchResponse } from "../shared/types";
 import { param, validationResult } from "express-validator";
 import Stripe from "stripe";
 import verifyToken, { cacheMiddleware } from "../middleware/auth";
-
+import { memoize } from "lodash";
 const stripe = new Stripe(process.env.STRIPE_API_KEY as string);
 
 const router = express.Router();
+
+const memoizedFetchHotels = memoize(async function () {
+    try {
+        const hotels = await Hotel.find().sort("-lastUpdated");
+        return hotels;
+    } catch (error) {
+        console.log("Error fetching hotels:", error);
+        throw error; // Propagate error to caller
+    }
+});
 
 router.get("/search", cacheMiddleware, async (req: Request, res: Response) => {
     try {
@@ -77,12 +87,24 @@ router.get('/search/suggestion/:query', cacheMiddleware, async (req: Request, re
 });
 
 
-router.get("/", cacheMiddleware, async (req: Request, res: Response) => {
+// router.get("/", cacheMiddleware, async (req: Request, res: Response) => {
+//     try {
+//         const hotels = await Hotel.find().sort("-lastUpdated");
+//         res.json(hotels);
+//     } catch (error) {
+//         console.log("error", error);
+//         res.status(500).json({ message: "Error fetching hotels" });
+//     }
+// });
+
+// Route handler with memoized function
+
+router.get("/", async (req, res) => {
     try {
-        const hotels = await Hotel.find().sort("-lastUpdated");
+        const hotels = await memoizedFetchHotels(); // Use memoized function
         res.json(hotels);
     } catch (error) {
-        console.log("error", error);
+        console.log("Error in route handler:", error);
         res.status(500).json({ message: "Error fetching hotels" });
     }
 });
