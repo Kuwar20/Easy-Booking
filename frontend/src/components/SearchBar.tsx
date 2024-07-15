@@ -20,6 +20,37 @@ const SearchBar = () => {
     const [childCount, setChildCount] = useState<number>(search.childCount);
     const inputRef = useRef<HTMLInputElement>(null);
 
+    // const { mutate: searchMutation } = useMutation(apiClient.searchHotelSuggestions, {
+    //     onSuccess: (data: any) => {
+    //         console.log('API response:', data);
+    //         if (data.length > 0) {
+    //             const matchingSuggestions = data
+    //                 .filter((hotel: { name: string; city: string; country: string; }) =>
+    //                     hotel.name.toLowerCase().includes(destination.toLowerCase()) ||
+    //                     hotel.city.toLowerCase().includes(destination.toLowerCase()) ||
+    //                     hotel.country.toLowerCase().includes(destination.toLowerCase())
+    //                 )
+    //                 .map((hotel: { name: string; city: string; country: any; }) => {
+    //                     if (hotel.name.toLowerCase().includes(destination.toLowerCase())) {
+    //                         return hotel.name;
+    //                     } else if (hotel.city.toLowerCase().includes(destination.toLowerCase())) {
+    //                         return `${hotel.city}, ${hotel.country}`;
+    //                     } else {
+    //                         return hotel.country;
+    //                     }
+    //                 });
+    //                 console.log('Matching suggestions:', matchingSuggestions);
+    //             setSuggestions([...new Set(matchingSuggestions as string[])]);
+    //         } else {
+    //             setSuggestions([]);
+    //         }
+    //     },
+    //     onError: (error: Error) => {
+    //         console.error("Error fetching suggestions:", error);
+    //         console.log('Error fetching suggestions:', error);
+    //         setSuggestions([]);
+    //     }
+    // });
     const { mutate: searchMutation } = useMutation(apiClient.searchHotelSuggestions, {
         onSuccess: (data: any) => {
             console.log('API response:', data);
@@ -39,18 +70,33 @@ const SearchBar = () => {
                             return hotel.country;
                         }
                     });
-                    console.log('Matching suggestions:', matchingSuggestions);
+                console.log('Matching suggestions:', matchingSuggestions);
                 setSuggestions([...new Set(matchingSuggestions as string[])]);
             } else {
                 setSuggestions([]);
             }
         },
-        onError: (error: Error) => {
+        onError: (error: any) => {
             console.error("Error fetching suggestions:", error);
+    
+            if (error.response) {
+                // The request was made and the server responded with a status code that falls out of the range of 2xx
+                console.log('Response data:', error.response.data);
+                console.log('Response status:', error.response.status);
+                console.log('Response headers:', error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.log('Request data:', error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error message:', error.message);
+            }
+            
+            console.log('Error config:', error.config);
             setSuggestions([]);
         }
     });
-
+    
     const handleSearchInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setDestination(value);

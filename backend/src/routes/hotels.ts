@@ -65,8 +65,8 @@ router.get("/search", cacheMiddleware, async (req: Request, res: Response) => {
     }
 });
 
-router.get('/search/suggestion/:query', cacheMiddleware, async (req: Request, res: Response) => {
-    let query = req.params.query.trim(); // Get the search query from the URL
+router.get('/search/suggestion/:query' , cacheMiddleware, async (req: Request, res: Response) => {
+    let query = req.params.query; // Get the search query from the URL
     console.log('Search Query:', query); // Check the value of query
 
     try {
