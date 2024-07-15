@@ -98,7 +98,7 @@ const SearchBar = () => {
     });
     
     const handleSearchInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.value;
+        let value = event.target.value;
         setDestination(value);
 
         if (value.length >= 2) {
