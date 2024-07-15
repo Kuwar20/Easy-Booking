@@ -207,12 +207,22 @@ export const searchHotelSuggestions = async (query: string) => {
             credentials: 'include',
         });
         console.log('Full API Response:', response);
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const text = await response.json();
-        console.log('Response text:', text);
-        return text;
+
+        const responseText = await response.text();
+        console.log('Response text:', responseText);
+
+        // Check if the response is JSON
+        try {
+            const data = JSON.parse(responseText);
+            console.log('Parsed JSON response:', data);
+            return data;
+        } catch (e) {
+            throw new Error(`Unexpected response format: ${responseText}`);
+        }
     } catch (error: any) {
         console.error('Error in searchHotelSuggestions:', error);
 
