@@ -87,15 +87,33 @@ const Detail = () => {
                             />
                         ))}
                     </div>
-                    <div className="bg-gray-50 p-6 rounded-lg shadow dark:bg-gray-800 transition-colors duration-300 text-gray-900 dark:text-black border">
-                        <GuestInfoForm
-                            pricePerNight={hotel.pricePerNight}
-                            hotelId={hotel._id}
-                        />
+
+                    <div>
+                        <h2 className="text-xl font-semibold mb-3">Amenities</h2>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                            {hotel.facilities.map((facility, index) => (
+                                <div key={index} className="bg-gray-100 rounded-lg p-3 text-center text-sm font-medium text-gray-700">
+                                    {facility}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
+                        <div>
+                            <h2 className="text-xl font-semibold mb-3">Description</h2>
+                            <p className="whitespace-pre-line">{hotel.description}</p>
+                        </div>
+                        <div className="bg-gray-50 p-6 rounded-lg shadow dark:bg-gray-800 transition-colors duration-300 text-gray-900 dark:text-black border">
+                            <GuestInfoForm
+                                pricePerNight={hotel.pricePerNight}
+                                hotelId={hotel._id}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div >
+        </div>
     );
 };
 
