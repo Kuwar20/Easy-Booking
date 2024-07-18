@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -18,10 +9,10 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const express_validator_1 = require("express-validator");
 const auth_1 = __importDefault(require("../middleware/auth"));
 const router = express_1.default.Router();
-router.get("/me", auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/me", auth_1.default, async (req, res) => {
     const userId = req.userId;
     try {
-        const user = yield user_1.default.findById(userId).select("-password");
+        const user = await user_1.default.findById(userId).select("-password");
         if (!user) {
             return res.status(400).json({ message: "User not found" });
         }
@@ -31,7 +22,7 @@ router.get("/me", auth_1.default, (req, res) => __awaiter(void 0, void 0, void 0
         console.log(error);
         res.status(500).json({ message: "something went wrong" });
     }
-}));
+});
 // /api/users/register
 router.post("/register", [
     (0, express_validator_1.check)("firstName").custom((value, { req }) => {
@@ -114,18 +105,18 @@ router.post("/register", [
         }
         return true;
     }),
-], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+], async (req, res) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
     try {
-        let user = yield user_1.default.findOne({ email: req.body.email });
+        let user = await user_1.default.findOne({ email: req.body.email });
         if (user) {
             return res.status(400).send({ message: "The user already exists" });
         }
         user = new user_1.default(req.body);
-        yield user.save();
+        await user.save();
         const token = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET_KEY, {
             expiresIn: "1d",
         });
@@ -140,7 +131,7 @@ router.post("/register", [
         console.log(error);
         res.status(500).json({ message: "Something went wrong", error });
     }
-}));
+});
 exports.default = router;
 // 3- Note :-
 //Routes define how an application responds to different HTTP (GET, POST, PUT, DELETE, etc.)  requests and navigate users to specific pages or functionalities.

@@ -2,3 +2,4 @@
 .env
 .env.e2e
 app.log
+dist
