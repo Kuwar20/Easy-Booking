@@ -23,6 +23,7 @@ mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string)
     .then((c) => console.log(`Connected to ${c.connections[0].name} database`))
     .catch((err) => console.log(`Error connecting to database: ${err.message}`))
 
+import redisClient from "./utils/redis";
 
 const app = express();
 app.use(cookieParser());
