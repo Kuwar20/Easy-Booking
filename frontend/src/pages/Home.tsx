@@ -12,10 +12,10 @@ const Home = () => {
     const bottomRowHotels = useMemo(() => hotels?.slice(2) || [], [hotels]);
 
     return (
-        <div className="max-w-6xl mx-auto px-3 py-2">
+        <div className="max-w-6xl mx-auto px-3 py-2 dark:bg-gray-800 transition-colors duration-300 text-gray-900 dark:text-white">
             <div className="text-center mb-6">
-                <h2 className="text-4xl font-bold text-gray-800 mb-2">Latest Destinations</h2>
-                <p className="text-xl text-gray-600">Most recent destinations added by our hosts</p>
+                <h2 className="text-4xl font-bold mb-2">Latest Destinations</h2>
+                <p className="text-xl">Most recent destinations added by our hosts</p>
             </div>
             <div className="space-y-12">
                 <div className="grid md:grid-cols-2 gap-8">

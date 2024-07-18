@@ -69,7 +69,7 @@ const GuestInfoForm = ({ hotelId, pricePerNight }: Props) => {
     };
 
     return (
-        <div className="flex flex-col p-4 bg-blue-200 gap-4">
+        <div className="flex flex-col p-4 bg-blue-200 gap-4  dark:bg-gray-800 transition-colors duration-300 text-gray-900 dark:text-blue-500">
             <h2 className="text-md font-bold">Price Per Night: ₹{pricePerNight}</h2>
             <form
                 onSubmit={

@@ -89,7 +89,7 @@ const Register = () => {
 
     return (
         <div className="min-h-[calc(100vh-25rem)] flex items-center justify-center py-1 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow">
+            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow  dark:bg-gray-800 transition-colors duration-300 text-gray-900 dark:text-white border">
             <form className='flex flex-col gap-5' onSubmit={onSubmit}>
                     <h2 className='mb-1 text-3xl font-bold text-center'>Create an Account</h2>
                     <div className="flex flex-col md:flex-row gap-5">
@@ -262,7 +262,7 @@ const Register = () => {
                 </form>
                 <div className="mt-6">
                     <div className="flex justify-center text-sm mb-3">
-                        <p className="px-2 text-gray-800 font-semibold hover:underline cursor-pointer rounded-md">
+                        <p className="px-2 text-gray-500 font-semibold hover:underline cursor-pointer rounded-md">
                             or continue with
                         </p>
                     </div>

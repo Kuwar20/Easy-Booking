@@ -60,7 +60,7 @@ const SignIn = () => {
 
     return (
         <div className="min-h-[calc(100vh-25rem)] flex items-center justify-center py-1 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow">
+            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow  dark:bg-gray-800 transition-colors duration-300 text-gray-900 dark:text-white border">
             <div className="flex items-center justify-center">
                     <h2 className="text-3xl font-bold">Sign In</h2>
                     <div
@@ -71,7 +71,7 @@ const SignIn = () => {
                     </div>
                 
                     {isPopoverVisible && (
-                        <div className="ml-2 p-2 bg-white border rounded shadow">
+                        <div className="ml-2 p-2 bg-white border rounded shadow  dark:bg-gray-800 transition-colors duration-300 text-gray-900 dark:text-white">
                             <p>New here? No worries! Skip the hassle of creating an account and take a quick tour with our test credentials.</p>
                             <div className="flex items-center">
                                 <p>Email: <span className="text-blue-700">Hirehim@gmail.com</span></p>
@@ -84,10 +84,10 @@ const SignIn = () => {
                         </div>
                     )}
                 </div>
-                <form className="mt-8 space-y-6" onSubmit={onSubmit}>
+                <form className="mt-8 space-y-6  dark:bg-gray-800 transition-colors duration-300 text-gray-900 dark:text-white bor" onSubmit={onSubmit}>
                     {/* Email */}
                     <div>
-                        <label className="block text-sm font-bold text-gray-700">
+                        <label className="block text-sm font-bold">
                             Email
                             <span className="text-red-500">*</span>
                         </label>
@@ -100,7 +100,7 @@ const SignIn = () => {
                     </div>
 
                     {/* Password */}
-                        <label className="block text-sm font-bold text-gray-700">
+                        <label className="block text-sm font-bold">
                             Password
                             <span className="text-red-500">*</span>
                         <div className="relative">

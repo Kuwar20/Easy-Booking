@@ -8,7 +8,7 @@ type Props = {
 
 const SearchResultsCard = ({ hotel }: Props) => {
     return (
-        <div className="border border-slate-300 rounded-lg p-4 bg-white shadow-md hover:shadow-lg transition-shadow flex flex-col">
+        <div className="border border-slate-300 rounded-lg p-4 bg-white shadow-md hover:shadow-lg flex flex-col  dark:bg-gray-800 transition-colors duration-300 text-gray-900 dark:text-white">
             <div className="w-full h-[200px]">
                 <img
                     src={hotel.imageUrls[0]}
@@ -32,7 +32,7 @@ const SearchResultsCard = ({ hotel }: Props) => {
                     >
                         {hotel.name}
                     </Link>
-                    <p className="mt-2 text-sm text-gray-600 line-clamp-3">
+                    <p className="mt-2 text-sm line-clamp-3">
                         {hotel.description}
                     </p>
                 </div>
@@ -48,13 +48,13 @@ const SearchResultsCard = ({ hotel }: Props) => {
                             </span>
                         ))}
                         {hotel.facilities.length > 3 && (
-                            <span className="text-xs text-gray-600">
+                            <span className="text-xs">
                                 +{hotel.facilities.length - 3} more
                             </span>
                         )}
                     </div>
                     <div className="flex justify-between items-center mt-4">
-                        <span className="font-bold text-lg text-gray-800">
+                        <span className="font-bold text-lg">
                             ₹{hotel.pricePerNight} per night
                         </span>
                         <Link

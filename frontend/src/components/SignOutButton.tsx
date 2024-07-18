@@ -24,7 +24,7 @@ const SignOutButton = () => {
     return (
         <button
             onClick={handleClick}
-            className="bg-white text-blue-600 px-4 py-2 rounded-md font-semibold hover:bg-blue-100 hover:text-blue-700 transition duration-200 flex items-center shadow-md"
+            className="bg-white text-blue-600 px-4 py-2 rounded-md font-semibold hover:bg-blue-100 hover:text-blue-700 transition duration-200 flex items-center shadow-md  dark:bg-gray-700 dark:text-white"
         >
             Sign Out
             <FaSignOutAlt className="ml-2" />
