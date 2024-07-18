@@ -1,21 +1,67 @@
+import React, { useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import * as apiClient from "./../api-client";
 import { AiFillStar } from "react-icons/ai";
 import GuestInfoForm from "../forms/GuestInfoForm/GuestInfoForm";
 
+const ImageWithBlur = React.memo(({ src, alt }: { src: string; alt: string }) => {
+    const [imageLoaded, setImageLoaded] = useState(false);
+    const [blurDataUrl, setBlurDataUrl] = useState('');
+
+    useEffect(() => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 10;
+        canvas.height = 10;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+            ctx.filter = 'blur(5px)';
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            img.src = src;
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0, 10, 10);
+                setBlurDataUrl(canvas.toDataURL());
+            };
+        }
+
+        const fullImg = new Image();
+        fullImg.src = src;
+        fullImg.onload = () => setImageLoaded(true);
+    }, [src]);
+
+    return (
+        <div className="h-64 rounded-lg overflow-hidden shadow-md relative">
+            {blurDataUrl && (
+                <img
+                    src={blurDataUrl}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover object-center"
+                    style={{ filter: 'blur(20px)', transform: 'scale(1.2)' }}
+                />
+            )}
+            <img
+                src={src}
+                alt={alt}
+                className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-500 ease-in-out ${imageLoaded ? 'opacity-100' : 'opacity-0'} transform hover:scale-105 transition-transform duration-300`}
+                loading="lazy"
+            />
+        </div>
+    );
+});
+
 const Detail = () => {
     const { hotelId } = useParams();
 
-    const { data: hotel } = useQuery(
-        "fetchHotelById",
+    const { data: hotel, isLoading } = useQuery(
+        ["fetchHotelById", hotelId],
         () => apiClient.fetchHotelById(hotelId || ""),
         {
             enabled: !!hotelId,
         }
     );
 
-    if (!hotel) {
+    if (isLoading || !hotel) {
         return <div className="text-center py-10">Loading...</div>;
     }
 
@@ -34,42 +80,22 @@ const Detail = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {hotel.imageUrls.map((image, index) => (
-                            <div key={index} className="h-64 rounded-lg overflow-hidden shadow-md">
-                                <img
-                                    src={image}
-                                    alt={`${hotel.name} - Image ${index + 1}`}
-                                    className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-300"
-                                />
-                            </div>
+                            <ImageWithBlur
+                                key={index}
+                                src={image}
+                                alt={`${hotel.name} - Image ${index + 1}`}
+                            />
                         ))}
                     </div>
-
-                    <div>
-                        <h2 className="text-xl font-semibold mb-3">Amenities</h2>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                            {hotel.facilities.map((facility, index) => (
-                                <div key={index} className="bg-gray-100 rounded-lg p-3 text-center text-sm font-medium text-gray-700">
-                                    {facility}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
-                        <div>
-                            <h2 className="text-xl font-semibold mb-3">Description</h2>
-                            <p className="whitespace-pre-line">{hotel.description}</p>
-                        </div>
-                        <div className="bg-gray-50 p-6 rounded-lg shadow dark:bg-gray-800 transition-colors duration-300 text-gray-900 dark:text-black border">
-                            <GuestInfoForm
-                                pricePerNight={hotel.pricePerNight}
-                                hotelId={hotel._id}
-                            />
-                        </div>
+                    <div className="bg-gray-50 p-6 rounded-lg shadow dark:bg-gray-800 transition-colors duration-300 text-gray-900 dark:text-black border">
+                        <GuestInfoForm
+                            pricePerNight={hotel.pricePerNight}
+                            hotelId={hotel._id}
+                        />
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

@@ -7,8 +7,6 @@ import verifyToken, { cacheMiddleware } from "../middleware/auth";
 import { memoize } from "lodash";
 const stripe = new Stripe(process.env.STRIPE_API_KEY as string);
 
-import redisClient from "../utils/redis";
-
 const router = express.Router();
 
 const memoizedFetchHotels = memoize(async function () {
@@ -88,36 +86,6 @@ router.get('/search/suggestion/:query' , cacheMiddleware, async (req: Request, r
     }
 });
 
-
-// with redis on local it is giving 250ms to 5,4 ms 
-router.get("/", async (req: Request, res: Response) => {
-    try {
-        // Check if data exists in Redis cache
-        const cachedHotels = await redisClient.get('all_hotels');
-        
-        if (cachedHotels) {
-            // If cached data exists, return it
-            console.log('Returning data from Redis cache');
-            return res.json(JSON.parse(cachedHotels));
-        }
-
-        // If not in cache, fetch from MongoDB
-        const hotels = await Hotel.find().sort("-lastUpdated");
-
-        // Store the fetched data in Redis cache
-        await redisClient.set('all_hotels', JSON.stringify(hotels), {
-            EX: 3600 // Set expiration to 1 hour (3600 seconds)
-        });
-
-        console.log('Data fetched from MongoDB and cached in Redis');
-        res.json(hotels);
-    } catch (error) {
-        console.log("error", error);
-        res.status(500).json({ message: "Error fetching hotels" });
-    }
-});
-
-
 // router.get("/", async (req: Request, res: Response) => {
 //     try {
 //         const hotels = await Hotel.find().sort("-lastUpdated");
@@ -128,17 +96,17 @@ router.get("/", async (req: Request, res: Response) => {
 //     }
 // });
 
-// Route handler with memoized function
+//Route handler with memoized function
 
-// router.get("/", async (req, res) => {
-//     try {
-//         const hotels = await memoizedFetchHotels(); // Use memoized function
-//         res.json(hotels);
-//     } catch (error) {
-//         console.log("Error in route handler:", error);
-//         res.status(500).json({ message: "Error fetching hotels" });
-//     }
-// });
+router.get("/", async (req, res) => {
+    try {
+        const hotels = await memoizedFetchHotels(); // Use memoized function
+        res.json(hotels);
+    } catch (error) {
+        console.log("Error in route handler:", error);
+        res.status(500).json({ message: "Error fetching hotels" });
+    }
+});
 
 router.get(
     "/:id",
