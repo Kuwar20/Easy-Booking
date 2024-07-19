@@ -26,6 +26,7 @@ const SignIn = () => {
     const {
         register,
         formState: { errors },
+        watch,
         handleSubmit,
     } = useForm<SignInFormData>();
 
@@ -46,6 +47,21 @@ const SignIn = () => {
         }
     });
 
+    const getLoginButtonMessage = () => {
+        if (loading) return 'Loading...';
+        if (!watch("email")) return 'Login';
+        if (!watch("password")) return 'Password is required';
+        return 'Login';
+    };
+
+    const isLoginButtonDisabled = () => {
+        return (
+            loading ||
+            !watch("email") ||
+            !watch("password")
+        );
+    };
+
     const onSubmit = handleSubmit((data) => {
         console.log(data);
         mutation.mutate(data);
@@ -61,7 +77,7 @@ const SignIn = () => {
     return (
         <div className="min-h-[calc(100vh-25rem)] flex items-center justify-center py-1 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow  dark:bg-gray-800 transition-colors duration-300 text-gray-900 dark:text-white border">
-            <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center">
                     <h2 className="text-3xl font-bold">Sign In</h2>
                     <div
                         className="text-blue-500 cursor-pointer ml-2 p-1 rounded-full border border-blue-500"
@@ -69,7 +85,7 @@ const SignIn = () => {
                     >
                         <FaInfoCircle size={20} />
                     </div>
-                
+
                     {isPopoverVisible && (
                         <div className="ml-2 p-2 bg-white border rounded shadow  dark:bg-gray-800 transition-colors duration-300 text-gray-900 dark:text-white">
                             <p>New here? No worries! Skip the hassle of creating an account and take a quick tour with our test credentials.</p>
@@ -93,49 +109,52 @@ const SignIn = () => {
                         </label>
                         <input
                             type="email"
-                            {...register("email", { required: "Email is required" })}
+                            {...register("email", { required: "" })}
                             className="mt-1 w-full border rounded-md px-3 py-2 placeholder-gray-500 text-gray-900 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-900"
                         />
                         {errors.email && <p className="mt-1 text-red-500 text-sm">{errors.email.message}</p>}
                     </div>
 
                     {/* Password */}
-                        <label className="block text-sm font-bold">
-                            Password
-                            <span className="text-red-500">*</span>
+                    <label className="block text-sm font-bold">
+                        Password
+                        <span className="text-red-500">*</span>
                         <div className="relative">
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            {...register("password", {
-                                required: "Password is required",
-                                minLength: {
-                                    value: 6,
-                                    message: "Password must be at least 6 characters",
-                                },
-                            })}
-                            className="mt-1 w-full border rounded-md px-3 py-2.5 placeholder-gray-500 text-gray-900 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-900"
-                        />
-                        <div
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                {...register("password", {
+                                    required: "",
+                                    minLength: {
+                                        value: 6,
+                                        message: "Password must be at least 6 characters",
+                                    },
+                                })}
+                                className="mt-1 w-full border rounded-md px-3 py-2.5 placeholder-gray-500 text-gray-900 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-900"
+                            />
+                            { watch("password") && (
+                            <div
                                 className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                                 onClick={() => setShowPassword(!showPassword)}
-                        >
-                            {showPassword ? (
-                                <FaEye className="h-5 w-5 text-gray-700" />
-                            ) : (
-                                <FaEyeSlash className="h-5 w-5 text-gray-700" />
+                            >
+
+                                {showPassword ? (
+                                    <FaEye className="h-5 w-5 text-gray-700" />
+                                ) : (
+                                    <FaEyeSlash className="h-5 w-5 text-gray-700" />
+                                )}
+                            </div>
                             )}
                         </div>
-                    </div>
-                    {errors.password && <p className="mt-1 text-red-500 text-sm">{errors.password.message}</p>}
+                        {errors.password && <p className="mt-1 text-red-500 text-sm">{errors.password.message}</p>}
                     </label>
                     <div className="flex flex-col items-center justify-between">
                         <button
                             type="submit"
-                            disabled={loading}
-                            className={`mt-2 bg-blue-600 text-white font-bold w-full p-2 rounded-md transition-colors duration-200 ${loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-500"
-                                }`}
+                            disabled={isLoginButtonDisabled()}
+                            className={`mt-2 bg-blue-600 text-white font-bold w-full p-2.5 rounded-md transition-colors duration-200 
+        ${isLoginButtonDisabled() ? "opacity-60" : "hover:bg-blue-500"}`}
                         >
-                            {loading ? "Loading..." : "Login"}
+                            {getLoginButtonMessage()}
                         </button>
                         <div className="text-sm mt-4">
                             Not Registered?{" "}

@@ -32,8 +32,8 @@ const Register = () => {
 
     const checkPasswordStrength = (password: any) => {
         let strength = 0;
-        if (password.length >= 8) strength += 2;
-        if (password.length > 12) strength += 1;
+        if (password.length >= 5) strength += 2;
+        if (password.length > 8) strength += 1;
         if (password.match(/[a-z]+/)) strength += 1;
         if (password.match(/[A-Z]+/)) strength += 1;
         if (password.match(/[0-9]+/)) strength += 1;
@@ -46,6 +46,27 @@ const Register = () => {
         return { strength, label: strengthLabel };
     };
 
+    const getButtonMessage = () => {
+        if (isLoading) return 'Loading...';
+        if (!watch("firstName")) return 'Register';
+        if (!watch("lastName")) return 'Last name is required';
+        if (!watch("email")) return 'Email is required';
+        if (!watch("password")) return 'Password is required';
+        if (!watch("confirmPassword")) return 'Confirm password is required';
+        if (passwordStrength.label === "Weak") return 'Password is weak';
+        return 'Register';
+    };
+    const isButtonDisabled = () => {
+        return (
+            isLoading ||
+            passwordStrength.label === "Weak" ||
+            !watch("confirmPassword") ||
+            !watch("password") ||
+            !watch("email") ||
+            !watch("lastName") ||
+            !watch("firstName")
+        );
+    };
     const onEmailChange = (_event: any, { newValue }: any) => {
         setEmail(newValue);
         setValue('email', newValue, { shouldValidate: true });
@@ -56,7 +77,12 @@ const Register = () => {
         const inputLength = inputValue.length;
 
         const emailProviders = ['gmail.com', 'icloud.com', 'yahoo.com', 'outlook.com',];
-
+        // this solves the problem that everytime we type a character, it shows all email providers even if the input value already has an provider or selected one from the options 
+        // if input value already has an '@' sign, return an empty array
+        if (inputValue.includes('@')) {
+            return [];
+        }
+        // if input value is empty, return all email providers
         return inputLength === 0 ? [] : emailProviders.map(provider => `${inputValue}@${provider}`);
     };
 
@@ -90,7 +116,7 @@ const Register = () => {
     return (
         <div className="min-h-[calc(100vh-25rem)] flex items-center justify-center py-1 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow  dark:bg-gray-800 transition-colors duration-300 text-gray-900 dark:text-white border">
-            <form className='flex flex-col gap-5' onSubmit={onSubmit}>
+                <form className='flex flex-col gap-5' onSubmit={onSubmit}>
                     <h2 className='mb-1 text-3xl font-bold text-center'>Create an Account</h2>
                     <div className="flex flex-col md:flex-row gap-5">
                         <label className="text-grey-700 text-sm font-bold flex-1">
@@ -168,19 +194,20 @@ const Register = () => {
                                         const hasNumber = /\d/.test(value);
 
                                         if (!hasUppercase) {
-                                            return "Password must contain at least 1 uppercase letter";
+                                            showToast({ message: "Password must contain at least 1 uppercase letter", type: "ERROR" });
+                                            return false;
                                         }
                                         if (!hasLowercase) {
-                                            return "Password must contain at least 1 lowercase letter";
+                                            showToast({ message: "Password must contain at least 1 lowercase letter", type: "ERROR" });
                                         }
                                         if (!hasSpecialChar) {
-                                            return "Password must contain at least 1 special character";
+                                            showToast({ message: "Password must contain at least 1 special character", type: "ERROR" });
                                         }
                                         if (!isNotEqualEmail) {
-                                            return "Password must not be equal to email";
+                                            showToast({ message: "Password must not be equal to email", type: "ERROR" });
                                         }
                                         if (!hasNumber) {
-                                            return "Password must contain at least 1 number";
+                                            showToast({ message: "Password must contain at least 1 number", type: "ERROR" });
                                         }
                                         return true;
                                     },
@@ -190,16 +217,18 @@ const Register = () => {
                                     register("password").onChange(e); // This ensures react-hook-form's onChange still runs
                                 }}
                             />
-                            <div
-                                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                                onClick={() => setShowPassword(!showPassword)}
-                            >
-                                {watch("password") && showPassword ? (
-                                    <FaEye className="h-5 w-5 text-gray-700" />
-                                ) : (
-                                    <FaEyeSlash className="h-5 w-5 text-gray-700" />
-                                )}
-                            </div>
+                            {watch("password") && (
+                                <div
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {watch("password") && showPassword ? (
+                                        <FaEye className="h-5 w-5 text-gray-700" />
+                                    ) : (
+                                        <FaEyeSlash className="h-5 w-5 text-gray-700" />
+                                    )}
+                                </div>
+                            )}
                         </div>
                         {errors.password && (
                             <span className="text-red-500">{errors.password.message}</span>
@@ -246,18 +275,50 @@ const Register = () => {
                         {errors.confirmPassword && (
                             <span className="text-red-500">{errors.confirmPassword.message}</span>
                         )}
+
                     </label>
                     <span>
                         <button
                             type="submit"
-                            disabled={isLoading}
-                            className={`w-full p-2.5 rounded-md transition-colors duration-200 ${isLoading
-                                ? 'bg-gray-400 cursor-not-allowed'
-                                : 'bg-green-600 hover:bg-green-700 text-white font-bold'
-                                }`}
+                            disabled={isButtonDisabled()}
+                            className={`
+        ${isButtonDisabled()
+                                    ? "bg-gray-500"
+                                    : "bg-green-600 hover:bg-green-700 cursor-pointer"
+                                }
+        text-white font-semibold w-full p-2.5 rounded-md transition-colors duration-200
+    `}
                         >
-                            {isLoading ? 'Loading...' : 'Create Account'}
+                            {getButtonMessage()}
                         </button>
+                        {/* <button
+                            type="submit"
+                            disabled={isLoading || passwordStrength.label === "Weak" || !watch("confirmPassword") || !watch("password") || !watch("email") || !watch("lastName") || !watch("firstName")}
+                            className={`
+                                ${isLoading || passwordStrength.label === "Weak" || !watch("confirmPassword") || !watch("password") || !watch("email") || !watch("lastName") || !watch("firstName")
+                                    ? "bg-gray-300"
+                                    : "bg-green-500 hover:bg-green-700"
+                                }
+                                text-white w-full p-2 rounded-md transition-colors duration-200
+                            `}
+                        >
+                            {isLoading
+                                ? 'Loading...'
+                                : !watch("firstName")
+                                    ? 'First name is required'
+                                    : !watch("lastName")
+                                        ? 'Last name is required'
+                                        : !watch("email")
+                                            ? 'Email is required'
+                                            : !watch("password")
+                                                ? 'Password is required'
+                                                : !watch("confirmPassword")
+                                                    ? 'Confirm password is required'
+                                                    : passwordStrength.label === "Weak"
+                                                        ? 'Password is weak'
+                                                        : 'Register'
+                            }
+                        </button> */}
                     </span>
                 </form>
                 <div className="mt-6">
