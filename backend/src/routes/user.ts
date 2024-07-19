@@ -5,6 +5,11 @@ import { body, check, validationResult } from "express-validator";
 import verifyToken from "../middleware/auth";
 const router = express.Router();
 
+import dotenv from 'dotenv';
+dotenv.config();
+import { OAuth2Client } from 'google-auth-library';
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 router.get("/me", verifyToken, async (req: Request, res: Response) => {
     const userId = req.userId;
 
@@ -134,31 +139,82 @@ router.post("/register", [
 ], async (req: Request, res: Response) => {
     const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty() && !req.body.credential) {
         return res.status(400).json({ errors: errors.array() });
     }
+
     try {
-        let user = await User.findOne({ email: req.body.email });
+        if (req.body.credential) {
+            // Google signup flow
+            const ticket = await client.verifyIdToken({
+                idToken: req.body.credential,
+                audience: process.env.GOOGLE_CLIENT_ID,
+            });
 
-        if (user) {
-            return res.status(400).send({ message: "The user already exists" });
+            const payload = ticket.getPayload();
+            const email = payload?.email;
+
+            if (!email) {
+                return res.status(400).json({ message: "Invalid Google credential" });
+            }
+
+            let user = await User.findOne({ email });
+
+            if (user) {
+                return res.status(400).json({ message: "User with this email already exists" });
+            }
+
+            // Generate a default password
+            const defaultPassword = 'defaultPassword';
+
+            user = new User({
+                email,
+                firstName: payload?.given_name || "",
+                lastName: payload?.family_name || "",
+                password: defaultPassword,
+            });
+            await user.save();
+
+            // Generate JWT and set cookie for Google signup
+            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY as string, {
+                expiresIn: "1d",
+            });
+
+            res.cookie("auth_token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                maxAge: 24 * 60 * 60 * 1000, // 24 hours
+            });
+
+            return res.status(200).json({ 
+                message: "Google signup successful",
+                defaultPassword: defaultPassword // Send this only in development
+            });
+        } else {
+            // Regular registration flow
+            let user = await User.findOne({ email: req.body.email });
+
+            if (user) {
+                return res.status(400).json({ message: "The user already exists" });
+            }
+
+            user = new User({...req.body});
+            await user.save();
+
+            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY as string, {
+                expiresIn: "1d",
+            });
+
+            res.cookie("auth_token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                maxAge: 24 * 60 * 60 * 1000, // 24 hours
+            });
+
+            return res.status(200).json({ message: "User registered successfully" });
         }
-
-        user = new User(req.body);
-        await user.save();
-
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET_KEY as string, {
-            expiresIn: "1d",
-        }
-        );
-        res.cookie("auth_token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        })
-        return res.status(200).send({ message: "User registered OK" }); // without json() it will not return anything when we hit the api, even though the api is working fine
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ message: "Something went wrong", error });
     }
 });
