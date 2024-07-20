@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  backend:
+    build: .
+    ports:
+      - "7000:7000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb+srv://username:username@mern-booking-app-db.juliw4w.mongodb.net/users?retryWrites=true&w=majority
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
