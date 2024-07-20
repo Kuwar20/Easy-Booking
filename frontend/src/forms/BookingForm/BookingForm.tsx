@@ -3,10 +3,9 @@ import {
     PaymentIntentResponse,
     UserType,
 } from "../../shared/types";
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { StripeCardElement } from "@stripe/stripe-js";
+import { CardElement } from "@stripe/react-stripe-js";
 import { useSearchContext } from "../../contexts/SearchContext";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import * as apiClient from "../../api-client";
 import { useAppContext } from "../../contexts/AppContext";
@@ -25,24 +24,24 @@ export type BookingFormData = {
     checkIn: string;
     checkOut: string;
     hotelId: string;
-    paymentIntentId: string;
     totalCost: number;
 };
 
 const BookingForm = ({ currentUser, paymentIntent }: Props) => {
-    const stripe = useStripe();
-    const elements = useElements();
-
     const search = useSearchContext();
     const { hotelId } = useParams();
 
     const { showToast } = useAppContext();
+    const navigate = useNavigate();
 
     const { mutate: bookRoom, isLoading } = useMutation(
         apiClient.createRoomBooking,
         {
             onSuccess: () => {
                 showToast({ message: "Booking Saved!", type: "SUCCESS" });
+                setTimeout(() => {
+                    navigate("/my-bookings");
+                }, 1500);
             },
             onError: () => {
                 showToast({ message: "Error saving booking", type: "ERROR" });
@@ -61,24 +60,24 @@ const BookingForm = ({ currentUser, paymentIntent }: Props) => {
             checkOut: search.checkOut.toISOString(),
             hotelId: hotelId,
             totalCost: paymentIntent.totalCost,
-            paymentIntentId: paymentIntent.paymentIntentId,
         },
     });
 
     const onSubmit = async (formData: BookingFormData) => {
-        if (!stripe || !elements) {
-            return;
-        }
+        // Simulate a successful payment
+        const simulatedPaymentIntent = {
+            id: 'simulated_' + Date.now(),
+            status: 'succeeded'
+        };
 
-        const result = await stripe.confirmCardPayment(paymentIntent.clientSecret, {
-            payment_method: {
-                card: elements.getElement(CardElement) as StripeCardElement,
-            },
-        });
+        // Add the simulated payment intent ID to the form data
+        const bookingData = {
+            ...formData,
+            paymentIntentId: simulatedPaymentIntent.id
+        };
 
-        if (result.paymentIntent?.status === "succeeded") {
-            bookRoom({ ...formData, paymentIntentId: result.paymentIntent.id });
-        }
+        // Call the booking mutation with the updated data
+        bookRoom(bookingData);
     };
 
     return (
@@ -134,15 +133,31 @@ const BookingForm = ({ currentUser, paymentIntent }: Props) => {
             <div className="space-y-2">
                 <h3 className="text-xl font-semibold">
                     Payment Details <span className="text-red-500">*</span>
-                </h3><CardElement
+                </h3>
+                <CardElement
                     id="payment-element"
                     className="border rounded-md p-2 text-sm"
+                    options={{
+                        style: {
+                            base: {
+                                fontSize: '16px',
+                                color: '#424770',
+                                '::placeholder': {
+                                    color: '#aab7c4',
+                                },
+                            },
+                            invalid: {
+                                color: '#9e2146',
+                            },
+                        },
+                    }}
                 />
             </div>
 
             <div className="flex justify-end">
                 <button
                     disabled={isLoading}
+                    hidden={!paymentIntent.clientSecret}
                     type="submit"
                     className="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-md disabled:bg-gray-500"
                 >
@@ -153,4 +168,4 @@ const BookingForm = ({ currentUser, paymentIntent }: Props) => {
     );
 };
 
-export default BookingForm; 
+export default BookingForm;
