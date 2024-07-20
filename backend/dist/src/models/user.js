@@ -11,7 +11,9 @@ const userSchema = new mongoose_1.default.Schema({
     password: { type: String, required: true },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-});
+    createdAt: { type: Date, default: Date.now },
+    updateAt: { type: Date, default: Date.now }
+}, { timestamps: true });
 //This line defines a Mongoose schema for a User. A schema maps to a MongoDB collection and defines the shape of the documents within that collection.
 //It's like a translator that helps MongoDB understand what a User should look like in the database.
 // It says that each User in the database should have an email, password, firstName, and lastName, and all of these should be strings. The email should be unique, and all fields are required.

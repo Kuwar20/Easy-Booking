@@ -9,6 +9,10 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const express_validator_1 = require("express-validator");
 const auth_1 = __importDefault(require("../middleware/auth"));
 const router = express_1.default.Router();
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const google_auth_library_1 = require("google-auth-library");
+const client = new google_auth_library_1.OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 router.get("/me", auth_1.default, async (req, res) => {
     const userId = req.userId;
     try {
@@ -107,28 +111,69 @@ router.post("/register", [
     }),
 ], async (req, res) => {
     const errors = (0, express_validator_1.validationResult)(req);
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty() && !req.body.credential) {
         return res.status(400).json({ errors: errors.array() });
     }
     try {
-        let user = await user_1.default.findOne({ email: req.body.email });
-        if (user) {
-            return res.status(400).send({ message: "The user already exists" });
+        if (req.body.credential) {
+            // Google signup flow
+            const ticket = await client.verifyIdToken({
+                idToken: req.body.credential,
+                audience: process.env.GOOGLE_CLIENT_ID,
+            });
+            const payload = ticket.getPayload();
+            const email = payload === null || payload === void 0 ? void 0 : payload.email;
+            if (!email) {
+                return res.status(400).json({ message: "Invalid Google credential" });
+            }
+            let user = await user_1.default.findOne({ email });
+            if (user) {
+                return res.status(400).json({ message: "User with this email already exists" });
+            }
+            // Generate a default password
+            const defaultPassword = 'defaultPassword';
+            user = new user_1.default({
+                email,
+                firstName: (payload === null || payload === void 0 ? void 0 : payload.given_name) || "",
+                lastName: (payload === null || payload === void 0 ? void 0 : payload.family_name) || "",
+                password: defaultPassword,
+            });
+            await user.save();
+            // Generate JWT and set cookie for Google signup
+            const token = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET_KEY, {
+                expiresIn: "1d",
+            });
+            res.cookie("auth_token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                maxAge: 24 * 60 * 60 * 1000, // 24 hours
+            });
+            return res.status(200).json({
+                message: "Google signup successful",
+                defaultPassword: defaultPassword // Send this only in development
+            });
         }
-        user = new user_1.default(req.body);
-        await user.save();
-        const token = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET_KEY, {
-            expiresIn: "1d",
-        });
-        res.cookie("auth_token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        });
-        return res.status(200).send({ message: "User registered OK" }); // without json() it will not return anything when we hit the api, even though the api is working fine
+        else {
+            // Regular registration flow
+            let user = await user_1.default.findOne({ email: req.body.email });
+            if (user) {
+                return res.status(400).json({ message: "The user already exists" });
+            }
+            user = new user_1.default(Object.assign({}, req.body));
+            await user.save();
+            const token = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET_KEY, {
+                expiresIn: "1d",
+            });
+            res.cookie("auth_token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                maxAge: 24 * 60 * 60 * 1000, // 24 hours
+            });
+            return res.status(200).json({ message: "User registered successfully" });
+        }
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ message: "Something went wrong", error });
     }
 });
