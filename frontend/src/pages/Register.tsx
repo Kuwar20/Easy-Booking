@@ -15,7 +15,9 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+// console.log(googleClientId);
+// console.log(API_BASE_URL); 
 
 
 export type RegisterFormData = {
