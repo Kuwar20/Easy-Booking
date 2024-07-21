@@ -15,24 +15,25 @@ const ImageWithBlur = React.memo(({ src, alt }: { src: string; alt: string }) =>
         canvas.height = 10;
         const ctx = canvas.getContext('2d');
         if (ctx) {
-            ctx.filter = 'blur(5px)';
             const img = new Image();
             img.crossOrigin = "Anonymous";
             img.src = src;
             img.onload = () => {
+                ctx.filter = 'blur(5px)';
                 ctx.drawImage(img, 0, 0, 10, 10);
                 setBlurDataUrl(canvas.toDataURL());
+                
+                // Load full image after blur is ready
+                const fullImg = new Image();
+                fullImg.src = src;
+                fullImg.onload = () => setImageLoaded(true);
             };
         }
-
-        const fullImg = new Image();
-        fullImg.src = src;
-        fullImg.onload = () => setImageLoaded(true);
     }, [src]);
 
     return (
         <div className="h-64 rounded-lg overflow-hidden shadow-md relative">
-            {blurDataUrl && (
+            {blurDataUrl && !imageLoaded && (
                 <img
                     src={blurDataUrl}
                     alt=""
