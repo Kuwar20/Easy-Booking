@@ -2,6 +2,7 @@ import Footer from '../components/Footer'
 import Header from '../components/Header'
 import Hero from '../components/Hero'
 import SearchBar from '../components/SearchBar';
+import ScrollToTopButton from '../components/ScrollToTopButton';
 
 interface Props {
     children: React.ReactNode;
@@ -17,6 +18,7 @@ const Layout = ({ children }: Props) => {
             </div>
             <div className='container mx-auto py-5 flex-1'>{children}</div>
             <Footer />
+            <ScrollToTopButton />
         </div>
     )
 }
