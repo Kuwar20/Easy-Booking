@@ -71,6 +71,8 @@ app.use(morgan(morganFormat, {
     }
 }));
 
+// Everytime we build frontend, we need to place the build files in the backend folder
+// then again, docker-compose build and docker-compose up in the root folder
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
 app.use("/api/auth", authRoutes);
