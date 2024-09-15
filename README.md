@@ -10,7 +10,8 @@
 Watch a video showcasing the project in action: 
 
 
-https://github.com/Kuwar20/Easy-Booking/assets/66473902/fecb30d8-f21c-4904-9c85-96857653a70b
+
+https://github.com/user-attachments/assets/82980fdc-b933-4f81-8fa6-5fd4bb545574
 
 
 ## Prerequisites
@@ -37,7 +38,7 @@ git clone https://github.com/Kuwar20/Easy-Booking
 ```bash
 Open a terminal
 
-# get insise frontend dir 
+# get inside frontend dir 
 cd "Mern Booking App/frontend"
 
 # install the dependencies 
