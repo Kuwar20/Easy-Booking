@@ -8,7 +8,7 @@ services:
     ports:
       - '7000:7000'
     environment:
-      - MONGODB_CONNECTION_STRING=mongodb+srv://username:username@mern-booking-app-db.juliw4w.mongodb.net/users?retryWrites=true&w=majority"
+      - MONGODB_CONNECTION_STRING=${MONGODB_CONNECTION_STRING}
 
     volumes:
       - ./backend:/app

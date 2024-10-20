@@ -21,6 +21,7 @@ https://github.com/user-attachments/assets/82980fdc-b933-4f81-8fa6-5fd4bb545574
 - [npm](https://www.npmjs.com/)&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Package manager for JavaScript
 - [MongoDB](https://www.mongodb.com/)&nbsp; &nbsp;&nbsp;&nbsp;  - NoSQL database for storing application data
 - [Tailwind CSS](https://tailwindcss.com/)&nbsp; - Utility-first CSS framework for styling
+- [TypeScript](https://www.typescriptlang.org/) &nbsp; &nbsp; - Superset of JavaScript that adds static types for better development and tooling
 
 ## Installation & Executing the website locally
 
@@ -66,6 +67,22 @@ npm run dev
 npm run e2e
 ```
 
+* Step-by-step Instruction - Docker Containerization
+```bash
+Open a terminal
+
+# get inside root dir 
+cd "Mern Booking App"
+
+# Build the containers (frontend, backend, and database)
+docker-compose build 
+
+# Run the containers (frontend, backend, and database)
+docker-compose up
+
+```
+
+
 * Note
 ```text
 For running this project locally, note that certain functionalities will be unavailable due to the absence of environment variables
@@ -110,6 +127,8 @@ Folder Structure
          .
          ├── backend   
          |   |
+         |   ├── Dockerfile
+         |   |
          │   ├── src 
          |   |   |
          │   │   ├── routes                # API routes
@@ -128,6 +147,8 @@ Folder Structure
          │       
          ├── frontend
          |   |
+         |   ├── Dockerfile
+         |   |
          │   ├── src   
          |   |   |
          │   │   ├── components            # Reusable UI components
@@ -139,6 +160,9 @@ Folder Structure
          |   |
          │   └── README.md              
          │
+         |
+         ├── docker-compose.yml
+         |
          └── README.md                     # Project-wide documentation
 
 
@@ -169,6 +193,23 @@ Folder Structure
 * jsonwebtoken
 * mongoose
 * multer
+  
+### DevOps
+* Docker for containerization
+* Docker Compose for multi-container orchestration
+
+## Service Worker & Offline Functionality
+
+This project now includes a service worker to enable offline functionality. The service worker caches key assets and API calls, ensuring the app remains usable even when the user is offline.
+
+In the production build, the service worker is bundled with the frontend and properly registered, allowing users to view previously loaded data while offline. This is especially useful for a booking app, as it helps maintain a seamless user experience during network disruptions.
+
+### Key updates:
+- Added service worker logic in `src/sw.ts`
+- Implemented service worker registration via `src/registerServiceWorker.ts`
+- Updated `vite.config.ts` to handle service worker files properly
+
+For local testing, you can simulate offline behavior using the browser's developer tools to verify the app's offline capabilities.
 
 
 ## Contributing
@@ -197,7 +238,8 @@ While I was the main developer of this MERN stack project, this project couldn't
 
 
 ## Version History
-
+* 0.5
+    * Added Service Worker
 * 0.4
     * Made Responsive for Smaller Screens
 * 0.3
