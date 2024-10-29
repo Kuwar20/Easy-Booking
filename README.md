@@ -35,6 +35,30 @@ Download this repo using
 git clone https://github.com/Kuwar20/Easy-Booking
 ```
 
+* Run the project - For Windows Users
+
+```bash
+
+# Run the script
+
+Simply Double click on "run_project.bat" file to execute the script.
+
+```
+
+* Run the Project - For macOS/Linux Users
+
+```bash
+
+# Make the script executable (only needed once after cloning)
+chmod +x run_project.sh
+
+# Run the script
+./run_project.sh
+
+```
+
+## If you prefer to run the program manually, follow the instructions below:
+
 * Step-by-step Instruction - Frontend
 ```bash
 Open a terminal
