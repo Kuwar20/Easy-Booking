@@ -9,15 +9,22 @@ export default defineConfig({
       registerType: 'autoUpdate',
       manifest: {
         name: 'Easy Booking',
-        short_name: 'App',
+        short_name: 'E-Booking',
+        description: 'Easy Booking App',
+        scope: '/',
         start_url: '/',
         display: 'standalone',
         background_color: '#ffffff',
         theme_color: '#000000',
         icons: [
           {
-            src: '/src/assets/review.png', // Change to your icon path
+            src: '/icons/review.png', // Change to your icon path
             sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/icon-512x512.png',
+            sizes: '512x512',
             type: 'image/png',
           },
           // Add more icons if needed
