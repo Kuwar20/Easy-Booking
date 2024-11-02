@@ -8,8 +8,8 @@
  * potential values.
  */
 require('dotenv').config();
-console.log('New Relic App Name:', process.env.NEW_RELIC_APP_NAME);
-console.log('New Relic License Key:', process.env.NEW_RELIC_LICENSE_KEY);
+// console.log('New Relic App Name:', process.env.NEW_RELIC_APP_NAME);
+// console.log('New Relic License Key:', process.env.NEW_RELIC_LICENSE_KEY);
 
 console.log("Starting application with New Relic...");
 
