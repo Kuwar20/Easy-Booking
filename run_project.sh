@@ -1,96 +1,151 @@
-# # this bash file is for mac and linux users
-# # open the terminal and run the following command First time only: chmod +x file_name.sh
-# # then run the file with this command: ./file_name.sh
+# this bash file is for mac and linux users
+# open the terminal and run the following command First time only: chmod +x file_name.sh
+# then run the file with this command: ./file_name.sh
 
-# # to run this file on windows, you need to install git bash
-# # then use the command: chmod +x file_name.sh
-# # then use the command: ./file_name.sh
+# to run this file on windows, you need to install git bash
+# then use the command: chmod +x file_name.sh
+# then use the command: ./file_name.sh
 
+#!/bin/bash
 
-#!/bin/sh
+# Exit on error
+set -e
 
-# Detect operating system and handle accordingly
-case "$(uname -s)" in
-    CYGWIN*|MINGW*|MSYS*)
-        echo "Windows detected, launching run_project.bat..."
-        cmd //c run_project.bat
-        exit $?
-        ;;
-    Darwin*)
-        echo "macOS detected"
-        ;;
-    Linux*)
-        echo "Linux detected"
-        ;;
-    *)
-        echo "Unknown operating system"
-        exit 1
-        ;;
-esac
-
-# Function to check command status
-check_status() {
-    if [ $? -ne 0 ]; then
-        echo "$1"
-        exit 1
-    fi
-}
+# Store the ports in variables for easy modification
+BACKEND_PORT=7000
+FRONTEND_PORT=5173
 
 # Function to check if a command exists
 command_exists() {
     command -v "$1" >/dev/null 2>&1
 }
 
-echo "Starting Easy-Booking MERN Application..."
+# Function to check if a port is in use
+port_in_use() {
+    if command_exists lsof; then
+        lsof -i ":$1" >/dev/null 2>&1
+    else
+        netstat -tuln | grep ":$1 " >/dev/null 2>&1
+    fi
+}
 
-# Check if npm is installed
+# Function to cleanup on script exit
+cleanup() {
+    echo "Cleaning up..."
+    # Kill any remaining processes
+    if [ -f "backend.pid" ]; then
+        kill $(cat backend.pid) 2>/dev/null || true
+        rm backend.pid
+    fi
+    if [ -f "frontend.pid" ]; then
+        kill $(cat frontend.pid) 2>/dev/null || true
+        rm frontend.pid
+    fi
+}
+
+# Set up trap for cleanup
+trap cleanup EXIT
+
+echo "================================="
+echo "  MERN Stack Application Startup"
+echo "================================="
+
+# Check if Node.js/npm is installed
 if ! command_exists npm; then
-    echo "Error: npm is not installed."
+    echo "Error: npm is not installed!"
+    echo "Please install Node.js from https://nodejs.org/"
     exit 1
 fi
 
 # Check if directories exist
 if [ ! -d "backend" ]; then
-    echo "Error: backend directory does not exist."
+    echo "Error: backend directory not found!"
+    echo "Please ensure you're running this script from the project root"
     exit 1
 fi
 
 if [ ! -d "frontend" ]; then
-    echo "Error: frontend directory does not exist."
+    echo "Error: frontend directory not found!"
+    echo "Please ensure you're running this script from the project root"
     exit 1
 fi
 
-# Change to backend directory and install dependencies
+# Check if ports are already in use
+if port_in_use $BACKEND_PORT; then
+    echo "Warning: Port $BACKEND_PORT is already in use!"
+    echo "You may need to free up the port before proceeding."
+    echo
+    echo "Options:"
+    echo "1. Continue anyway"
+    echo "2. Exit and free up ports"
+    read -p "Choose an option (1 or 2): " choice
+    if [ "$choice" = "2" ]; then
+        echo
+        echo "To free up ports, run:"
+        echo "sudo lsof -i :$BACKEND_PORT"
+        echo "kill -9 <PID>"
+        exit 1
+    fi
+fi
+
+if port_in_use $FRONTEND_PORT; then
+    echo "Warning: Port $FRONTEND_PORT is already in use!"
+    echo "You may need to free up the port before proceeding."
+    echo
+    echo "Options:"
+    echo "1. Continue anyway"
+    echo "2. Exit and free up ports"
+    read -p "Choose an option (1 or 2): " choice
+    if [ "$choice" = "2" ]; then
+        echo
+        echo "To free up ports, run:"
+        echo "sudo lsof -i :$FRONTEND_PORT"
+        echo "kill -9 <PID>"
+        exit 1
+    fi
+fi
+
+# Check for package.json files
+if [ ! -f "backend/package.json" ]; then
+    echo "Error: backend/package.json not found!"
+    exit 1
+fi
+
+if [ ! -f "frontend/package.json" ]; then
+    echo "Error: frontend/package.json not found!"
+    exit 1
+fi
+
+# Install backend dependencies and start server
+echo
 echo "Installing backend dependencies..."
-cd backend || { echo "Error: Could not change to backend directory"; exit 1; }
+cd backend
 npm install
-check_status "Failed to install backend dependencies"
 
-# Start backend in background
 echo "Starting backend server..."
-npm run dev & BACKEND_PID=$!
+npm run dev & echo $! > ../backend.pid
+cd ..
 
-# Verify backend started successfully
-sleep 2
-if ! kill -0 $BACKEND_PID 2>/dev/null; then
-    echo "Error: Backend server failed to start."
-    exit 1
-fi
-
-# Change back to root and then to frontend directory
-cd .. || { kill $BACKEND_PID; echo "Error: Could not change to root directory"; exit 1; }
-cd frontend || { kill $BACKEND_PID; echo "Error: Could not change to frontend directory"; exit 1; }
-
-# Install frontend dependencies
+# Install frontend dependencies and start server
+echo
 echo "Installing frontend dependencies..."
+cd frontend
 npm install
-check_status "Failed to install frontend dependencies"
 
-# Start frontend
 echo "Starting frontend..."
-trap 'kill $BACKEND_PID; exit' INT TERM EXIT  # Ensure backend is killed when script exits
-npm run dev & FRONTEND_PID=$!
+npm run dev & echo $! > ../frontend.pid
+cd ..
 
-# Wait for both servers
-wait $BACKEND_PID
-wait $FRONTEND_PID
+echo
+echo "================================="
+echo "  Startup Complete!"
+echo "  - Backend running on port $BACKEND_PORT"
+echo "  - Frontend running on port $FRONTEND_PORT"
+echo
+echo "  To stop the servers:"
+echo "  1. Press Ctrl+C"
+echo "  2. Or run: kill \$(cat backend.pid) \$(cat frontend.pid)"
+echo "================================="
+
+# Wait for both processes
+wait

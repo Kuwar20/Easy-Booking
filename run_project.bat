@@ -33,11 +33,18 @@
 :: You can now start your application on the previously occupied port without conflicts.
 
 
-
 @echo off
-echo Starting Easy-Booking Application...
+setlocal enabledelayedexpansion
 
-:: Check if npm is installed
+:: Store the ports in variables for easy modification
+set BACKEND_PORT=7000
+set FRONTEND_PORT=5173
+
+echo =================================
+echo   MERN Stack Application Startup
+echo =================================
+
+:: Check if Node.js/npm is installed
 where npm >nul 2>nul
 if %ERRORLEVEL% neq 0 (
     echo Error: npm is not installed or not in PATH
@@ -61,7 +68,60 @@ if not exist "frontend" (
     exit /b 1
 )
 
+:: Check if ports are already in use
+netstat -ano | findstr ":%BACKEND_PORT%" >nul
+if %ERRORLEVEL% equ 0 (
+    echo Warning: Port %BACKEND_PORT% is already in use!
+    echo You may need to free up the port before proceeding.
+    echo.
+    echo Options:
+    echo 1. Continue anyway
+    echo 2. Exit and free up ports
+    choice /c 12 /n /m "Choose an option (1 or 2): "
+    if !ERRORLEVEL! equ 2 (
+        echo.
+        echo To free up ports, run these commands in an admin PowerShell:
+        echo netstat -ano ^| findstr :%BACKEND_PORT%
+        echo taskkill /PID ^<PID^> /F
+        pause
+        exit /b 1
+    )
+)
+
+netstat -ano | findstr ":%FRONTEND_PORT%" >nul
+if %ERRORLEVEL% equ 0 (
+    echo Warning: Port %FRONTEND_PORT% is already in use!
+    echo You may need to free up the port before proceeding.
+    echo.
+    echo Options:
+    echo 1. Continue anyway
+    echo 2. Exit and free up ports
+    choice /c 12 /n /m "Choose an option (1 or 2): "
+    if !ERRORLEVEL! equ 2 (
+        echo.
+        echo To free up ports, run these commands in an admin PowerShell:
+        echo netstat -ano ^| findstr :%FRONTEND_PORT%
+        echo taskkill /PID ^<PID^> /F
+        pause
+        exit /b 1
+    )
+)
+
+:: Check for package.json files
+if not exist "backend\package.json" (
+    echo Error: backend/package.json not found!
+    pause
+    exit /b 1
+)
+
+if not exist "frontend\package.json" (
+    echo Error: frontend/package.json not found!
+    pause
+    exit /b 1
+)
+
 :: Change to backend directory and install dependencies
+echo.
 echo Installing backend dependencies...
 cd backend
 call npm install
@@ -74,7 +134,7 @@ if %ERRORLEVEL% neq 0 (
 
 :: Start backend in a new terminal window
 echo Starting backend server...
-start cmd /k "npm run dev"
+start "MERN Backend Server" cmd /k "title Backend Server && npm run dev"
 if %ERRORLEVEL% neq 0 (
     echo Error: Failed to start backend server
     cd ..
@@ -87,6 +147,7 @@ cd ..
 cd frontend
 
 :: Install frontend dependencies
+echo.
 echo Installing frontend dependencies...
 call npm install
 if %ERRORLEVEL% neq 0 (
@@ -98,7 +159,7 @@ if %ERRORLEVEL% neq 0 (
 
 :: Start frontend
 echo Starting frontend...
-call npm run dev
+start "MERN Frontend Server" cmd /k "title Frontend Server && npm run dev"
 if %ERRORLEVEL% neq 0 (
     echo Error: Failed to start frontend server
     cd ..
@@ -106,4 +167,19 @@ if %ERRORLEVEL% neq 0 (
     exit /b 1
 )
 
-echo Both frontend and backend are now running!
+echo.
+echo =================================
+echo   Startup Complete!
+echo   - Backend running on port %BACKEND_PORT%
+echo   - Frontend running on port %FRONTEND_PORT%
+echo.
+echo   To stop the servers:
+echo   1. Close both terminal windows using X
+echo   2. Or press Ctrl+C in each window
+echo =================================
+
+:: Return to the original directory
+cd ..
+
+:: Keep the main window open to show the message
+pause
