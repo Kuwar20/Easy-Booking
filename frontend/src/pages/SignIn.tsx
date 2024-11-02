@@ -80,30 +80,55 @@ const SignIn = () => {
             setTimeout(() => setIsCopiedCallback(false), 2000); // Reset the copy state after 2 seconds
         });
     };
+    // const handleGoogleLogin = async (credentialResponse: any) => {
+    //     try {
+    //         const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    //             method: 'POST',
+    //             credentials: 'include',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify({ credential: credentialResponse.credential })
+    //         });
+    //         const data = await response.json();
+
+    //         if (!response.ok) {
+    //             throw new Error(data.message || 'Google login failed');
+    //         }
+
+    //         showToast({ message: "Google login successful", type: "SUCCESS" });
+    //         await queryClient.invalidateQueries("validateToken");
+    //         navigate("/");
+    //     } catch (error: any) {
+    //         showToast({ message: error.message, type: "ERROR" });
+    //     }
+    // };
     const handleGoogleLogin = async (credentialResponse: any) => {
         try {
             const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ credential: credentialResponse.credential })
+                body: JSON.stringify({ credential: credentialResponse.credential }),
             });
+            
             const data = await response.json();
-
+            
             if (!response.ok) {
                 throw new Error(data.message || 'Google login failed');
             }
-
+            
             showToast({ message: "Google login successful", type: "SUCCESS" });
             await queryClient.invalidateQueries("validateToken");
             navigate("/");
         } catch (error: any) {
-            showToast({ message: error.message, type: "ERROR" });
+            const errorMessage = error.response?.data?.message || error.message || "An unknown error occurred";
+            showToast({ message: errorMessage, type: "ERROR" });
         }
     };
-
+    
     return (
         <GoogleOAuthProvider clientId={googleClientId}>
             <div className="min-h-[calc(100vh-25rem)] flex items-center justify-center py-1 px-4 sm:px-6 lg:px-8">

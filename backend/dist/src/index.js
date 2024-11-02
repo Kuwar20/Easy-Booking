@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require("newrelic");
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 require("dotenv/config");
@@ -55,14 +56,16 @@ app.use((0, morgan_1.default)(morganFormat, {
         }
     }
 }));
-app.use(express_1.default.static(path_1.default.join(__dirname, "../../frontend/dist")));
+// Everytime we build frontend, we need to place the build files in the backend folder
+// then again, docker-compose build and docker-compose up in the root folder
+app.use(express_1.default.static(path_1.default.join(__dirname, "../frontend/dist")));
 app.use("/api/auth", auth_1.default);
 app.use("/api/users", user_1.default);
 app.use("/api/my-hotels", my_hotels_1.default);
 app.use("/api/hotels", hotels_1.default);
 app.use("/api/my-bookings", my_bookings_1.default);
 app.get("*", (req, res) => {
-    res.sendFile(path_1.default.join(__dirname, "../../frontend/dist/index.html"));
+    res.sendFile(path_1.default.join(__dirname, "../frontend/dist/index.html"));
 });
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

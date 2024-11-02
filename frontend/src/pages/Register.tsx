@@ -142,7 +142,6 @@ const Register = () => {
         console.log(data);
         mutation.mutate(data);
     });
-    
     const handleGoogleSignup = async (credentialResponse: any) => {
         try {
             const response = await fetch(`${API_BASE_URL}/api/users/register`, {
@@ -153,20 +152,49 @@ const Register = () => {
                 },
                 body: JSON.stringify({ credential: credentialResponse.credential })
             });
-
+    
             const data = await response.json();
-
+            
+            // Log the entire data response for debugging
+            console.log("Response Data:", JSON.stringify(data, null, 2));
+    
             if (!response.ok) {
-                throw new Error(data.message || 'Google login failed');
+                throw new Error(data.message || 'Google Signup failed');
             }
-
+    
             showToast({ message: "Google login successful", type: "SUCCESS" });
             await queryClient.invalidateQueries("validateToken");
             navigate("/");
         } catch (error: any) {
+            console.error("Error during Google Signup:", error);
             showToast({ message: error.message, type: "ERROR" });
         }
     };
+     
+    // const handleGoogleSignup = async (credentialResponse: any) => {
+    //     try {
+    //         const response = await fetch(`${API_BASE_URL}/api/users/register`, {
+    //             method: 'POST',
+    //             credentials: 'include',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify({ credential: credentialResponse.credential })
+    //         });
+
+    //         const data = await response.json();
+
+    //         if (!response.ok) {
+    //             throw new Error(data.message || 'Google Signup failed');
+    //         }
+
+    //         showToast({ message: "Google login successful", type: "SUCCESS" });
+    //         await queryClient.invalidateQueries("validateToken");
+    //         navigate("/");
+    //     } catch (error: any) {
+    //         showToast({ message: error.message, type: "ERROR" });
+    //     }
+    // };
 
     return (
         <GoogleOAuthProvider clientId={googleClientId}>
