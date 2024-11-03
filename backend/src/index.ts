@@ -29,12 +29,14 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-    cors({
-        origin: process.env.FRONTEND_URL,
-        credentials: true,
-    })
-);
+app.use(cors());
+
+// app.use(
+//     cors({
+//         origin: process.env.FRONTEND_URL,
+//         credentials: true,
+//     })
+// );
 
 // this is a test endpoint/api route at '/api/test' to make sure everything is working properly
 // you can access using GET at http://localhost:7000/api/test
