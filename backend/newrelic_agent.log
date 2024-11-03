@@ -274,3 +274,25 @@
 {"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":10576,"time":"2024-11-03T04:50:53.803Z","msg":"Valid event_harvest_config received. Updating harvest cycles. {\"report_period_ms\":5000,\"harvest_limits\":{\"error_event_data\":8,\"log_event_data\":833,\"analytic_event_data\":833,\"custom_event_data\":250}}"}
 {"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":10576,"time":"2024-11-03T04:50:53.813Z","msg":"Agent state changed from connected to started."}
 {"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":10576,"time":"2024-11-03T04:50:54.826Z","msg":"Starting initial 1000ms harvest."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":10796,"time":"2024-11-03T07:32:30.819Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.9.0."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":10796,"time":"2024-11-03T07:32:31.119Z","msg":"Using AsyncLocalContextManager"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":10796,"time":"2024-11-03T07:32:31.274Z","msg":"Agent state changed from stopped to starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":10796,"time":"2024-11-03T07:32:31.296Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":10796,"time":"2024-11-03T07:32:31.296Z","msg":"Agent state changed from starting to connecting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":10796,"time":"2024-11-03T07:32:38.318Z","msg":"Agent state changed from connecting to connected."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":10796,"time":"2024-11-03T07:32:38.318Z","msg":"Connected to collector.newrelic.com:443 with agent run ID BQd3PPSOZePZAFN6pjwWgV5nJydoAAgBAAAnIQEAACosAgQ8FoLBAwAGMTIuNi4wAAVLdXdhcgATRWFzeUJvb2tpbmctQmFja2VuZA.","component":"collector_api"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":10796,"time":"2024-11-03T07:32:38.319Z","msg":"Reporting to: https://rpm.newrelic.com/accounts/5470886/applications/1008108225","component":"collector_api"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":10796,"time":"2024-11-03T07:32:38.322Z","msg":"Valid event_harvest_config received. Updating harvest cycles. {\"report_period_ms\":5000,\"harvest_limits\":{\"error_event_data\":8,\"log_event_data\":833,\"analytic_event_data\":833,\"custom_event_data\":250}}"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":10796,"time":"2024-11-03T07:32:38.331Z","msg":"Agent state changed from connected to started."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":10796,"time":"2024-11-03T07:32:39.342Z","msg":"Starting initial 1000ms harvest."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":58896,"time":"2024-11-03T13:18:27.465Z","msg":"Using New Relic for Node.js. Agent version: 12.6.0; Node version: v20.9.0."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":58896,"time":"2024-11-03T13:18:27.770Z","msg":"Using AsyncLocalContextManager"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":58896,"time":"2024-11-03T13:18:27.903Z","msg":"Agent state changed from stopped to starting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":58896,"time":"2024-11-03T13:18:27.927Z","msg":"Starting New Relic for Node.js connection process."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":58896,"time":"2024-11-03T13:18:27.928Z","msg":"Agent state changed from starting to connecting."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":58896,"time":"2024-11-03T13:18:35.395Z","msg":"Agent state changed from connecting to connected."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":58896,"time":"2024-11-03T13:18:35.395Z","msg":"Connected to collector.newrelic.com:443 with agent run ID BRP5OLP8mRxVAFN6pjwWgV5nJ3iAAAgBAAAnIQEAAOYQAgQ8FoLBAwAGMTIuNi4wAAVLdXdhcgATRWFzeUJvb2tpbmctQmFja2VuZA.","component":"collector_api"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":58896,"time":"2024-11-03T13:18:35.396Z","msg":"Reporting to: https://rpm.newrelic.com/accounts/5470886/applications/1008108225","component":"collector_api"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":58896,"time":"2024-11-03T13:18:35.399Z","msg":"Valid event_harvest_config received. Updating harvest cycles. {\"report_period_ms\":5000,\"harvest_limits\":{\"error_event_data\":8,\"log_event_data\":833,\"analytic_event_data\":833,\"custom_event_data\":250}}"}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":58896,"time":"2024-11-03T13:18:35.407Z","msg":"Agent state changed from connected to started."}
+{"v":0,"level":30,"name":"newrelic","hostname":"Kuwar","pid":58896,"time":"2024-11-03T13:18:36.419Z","msg":"Starting initial 1000ms harvest."}
